@@ -666,3 +666,15 @@ footer {
 
 
 
+
+
+@media (max-width: 480px) {
+    .modal-footer {
+        flex-direction: column;
+    }
+    .modal-footer .btn {
+        width: 100%;
+        margin-left: 0;
+    }
+    /* Reverse order visually if desired, but column is fine for now */
+}

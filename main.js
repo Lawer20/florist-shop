@@ -64,8 +64,15 @@ function renderProducts() {
 }
 
 function initMobileMenu() {
-    // Simple placeholder for mobile interaction
-    console.log("Mobile menu init");
+    const btn = document.querySelector('.mobile-menu-btn');
+    const nav = document.querySelector('.main-nav');
+
+    if (btn && nav) {
+        btn.addEventListener('click', () => {
+            nav.classList.toggle('open');
+            btn.classList.toggle('open'); // for hamburger animation if needed
+        });
+    }
 }
 
 /* --- Modal Logic --- */
