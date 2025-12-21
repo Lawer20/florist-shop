@@ -370,11 +370,7 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .site-header {
-        position: relative;
-        /* On mobile, maybe solid header? or keep absolute but adjust */
-        background-color: var(--color-heading);
-    }
+    .site-header { position: absolute; background-color: transparent; }
 
     .hero {
         margin-top: 0;
@@ -678,3 +674,4 @@ footer {
     }
     /* Reverse order visually if desired, but column is fine for now */
 }
+
