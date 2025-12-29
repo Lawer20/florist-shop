@@ -1,37 +1,5 @@
-// Sample Data
-const products = [
-    {
-        id: 1,
-        title: "Spring Radiance",
-        price: 55.00,
-        image: "bouquet_spring_mix.png"
-    },
-    {
-        id: 2,
-        title: "Classic Romance",
-        price: 75.00,
-        image: "bouquet_elegant_roses.png"
-    },
-    {
-        id: 3,
-        title: "Wildflower Dream",
-        price: 60.00,
-        image: "bouquet_spring_mix.png" // Reusing for demo
-    },
-    {
-        id: 4,
-        title: "Pure Elegance",
-        price: 85.00,
-        image: "bouquet_elegant_roses.png" // Reusing for demo
-    }
-];
+// Data is now loaded from js/data.js
 
-const addOns = [
-    { id: 'bear', name: 'Teddy Bear', price: 15.00, image: 'addon_teddy_bear.png' },
-    { id: 'chocolates', name: 'Premium Chocolates', price: 12.00, image: 'addon_chocolates.png' },
-    { id: 'vase', name: 'Glass Vase', price: 20.00, image: 'addon_glass_vase.png' },
-    { id: 'candle', name: 'Scented Candle', price: 15.00, image: 'addon_scented_candle.png' }
-];
 
 /* --- State --- */
 let currentProduct = null;
@@ -40,16 +8,24 @@ let cart = [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    renderProducts();
+    // If we are on the homepage, render featured ONLY
+    const grid = document.getElementById('product-grid');
+    if (grid) {
+        // Simple check: if this is homepage vs shop page
+        // For now, index.html will use 'product-grid' and we filter for featured
+        const featuredProducts = products.filter(p => p.featured);
+        renderProductGrid(grid, featuredProducts);
+    }
+
     initMobileMenu();
     updateCartCount();
 });
 
-function renderProducts() {
-    const grid = document.getElementById('product-grid');
-    if (!grid) return;
+// Renaming to generic render function we can reuse
+function renderProductGrid(container, items) {
+    if (!container) return;
 
-    grid.innerHTML = products.map(product => `
+    container.innerHTML = items.map(product => `
         <div class="product-card">
             <div class="img-wrapper">
                 <img src="${product.image}" alt="${product.title}" loading="lazy">
@@ -57,7 +33,7 @@ function renderProducts() {
             <div class="product-info">
                 <h3>${product.title}</h3>
                 <p class="price">$${product.price.toFixed(2)}</p>
-                <button class="btn btn-secondary" style="color: #333; border-color: #333;" onclick="openModal(${product.id})">Add to Cart</button>
+                <button class="btn btn-secondary" style="color: #333; border-color: #333;" onclick="openModal(${product.id})">Customize</button>
             </div>
         </div>
     `).join('');

@@ -4,31 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vita Flowers | Exquisite Bouquets in Elmwood Park, IL</title>
-    <meta name="description"
-        content="Premium floral arrangements and custom bouquets at Vita Flowers, Elmwood Park, IL. Order fresh flowers for delivery or pickup.">
+    <title>Contact Us | Vita Flowers</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
+    <style>
+        .page-content {
+            padding-top: 120px;
+            min-height: 60vh;
+        }
+    </style>
 </head>
 
 <body>
 
-    <header class="site-header">
+    <header class="site-header solid">
         <div class="container header-container">
             <div class="logo">
-                Vita<span class="accent">Flowers</span>
+                <a href="index.html" style="text-decoration:none; color:inherit;">Vita<span
+                        class="accent">Flowers</span></a>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
                     <li>
                         <button class="btn-cart" onclick="openCart()">
                             Cart <span id="cart-count" class="cart-count">0</span>
@@ -45,79 +50,17 @@
     </header>
 
     <main>
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <div class="hero-content">
-                <span class="subtitle">Handcrafted in Illinois</span>
-                <h1>Making Moments <br><em>Unforgettable</em></h1>
-                <p>Premium floral arrangements for weddings, events, and everyday joy.</p>
-                <div class="hero-buttons">
-                    <a href="shop.html" class="btn btn-primary">View Collection</a>
-                </div>
-            </div>
+        <section class="page-hero">
+            <!-- Text removed for cleaner look -->
         </section>
 
-        <!-- About Section -->
-        <section id="about" class="about-section">
+        <div class="breadcrumbs-strip">
             <div class="container">
-                <div class="section-header text-center">
-                    <h2>Our Passion for Petals</h2>
-                    <p class="section-desc">Creating art with nature's finest colors.</p>
-                </div>
-                <div class="about-grid">
-                    <div class="about-text">
-                        <p>Welcome to our floral studio based in the heart of Illinois. We believe that every bouquet
-                            tells a story. Whether it's a grand celebration or a small gesture of love, we craft each
-                            arrangement with precision, care, and a touch of magic.</p>
-                        <p>Using only the freshest seasonal blooms, we ensure that your flowers arrive vibrant and
-                            fragrant, ready to brighten any space.</p>
-                    </div>
-                    <!-- Values / Features -->
-                    <div class="features-grid">
-                        <div class="feature-item">
-                            <h3>Fresh Blooms</h3>
-                            <p>Sourced daily for maximum longevity.</p>
-                        </div>
-                        <div class="feature-item">
-                            <h3>Uniques Designs</h3>
-                            <p>Tailored to your specific style and occasion.</p>
-                        </div>
-                        <div class="feature-item">
-                            <h3>Local Love</h3>
-                            <p>Serving the Illinois community with pride.</p>
-                        </div>
-                    </div>
-                </div>
+                <a href="index.html">Home</a> &gt; <span>Contact Us</span>
             </div>
-        </section>
+        </div>
 
-        <!-- Product Gallery / Shop Preview -->
-        <section id="shop" class="shop-section">
-            <div class="container">
-                <div class="section-header text-center">
-                    <h2>Premium Collections</h2>
-                    <p class="section-desc">Hand-picked favorites for your special moments.</p>
-                </div>
-
-                <div id="product-grid" class="product-grid">
-                    <!-- Products will be injected here via JS -->
-                    <!-- Fallback content if JS fails -->
-                    <div class="product-card">
-                        <div class="img-wrapper">
-                            <!-- Placeholder -->
-                            <div class="placeholder-img">Loading...</div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Spring Radiance</h3>
-                            <p class="price">$55.00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="contact-section">
+        <section class="contact-section animate-entrance" style="padding: 0 0 60px;">
             <div class="container contact-container">
                 <div class="contact-info">
                     <h2>Get in Touch</h2>
@@ -142,13 +85,14 @@
                         <a href="#">Instagram</a>
                         <a href="#">Facebook</a>
                     </div>
-                </div>
-                <!-- Removed default contact form to prioritize checkout flow, kept info -->
+                </div> <!-- Close contact-info -->
+
                 <div class="contact-image-decoration">
-                    <!-- Optional: Put an image here or just leave the text details centered/styled differently later -->
-                    <img src="hero_flowers_background.png" alt="Flowers" style="border-radius: 8px; opacity: 0.8;">
+                    <img src="hero_flowers_background.png" alt="Flowers"
+                        style="border-radius: 8px; opacity: 0.8; width: 100%; max-width: 500px;">
                 </div>
-            </div>
+            </div> <!-- Close img decoration -->
+            </div> <!-- Close container -->
         </section>
     </main>
 
@@ -196,32 +140,7 @@
         </div>
     </footer>
 
-    <!-- Customization Modal -->
-    <div id="custom-modal" class="modal hidden">
-        <div class="modal-overlay" onclick="closeModal('custom-modal')"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-product-title">Customize Your Gift</h3>
-                <button class="close-btn" onclick="closeModal('custom-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p class="modal-subtitle">Enhance your bouquet with our premium add-ons.</p>
-                <div id="addons-list" class="addons-list">
-                    <!-- Add-ons injected via JS -->
-                </div>
-                <div class="total-section">
-                    <span>Total Estimate:</span>
-                    <span id="modal-total-price" class="total-price">$0.00</span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary text-dark" onclick="closeModal('custom-modal')">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmAddToCart()">Add to Cart</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cart Modal -->
+    <!-- Shared Modals -->
     <div id="cart-modal" class="modal hidden">
         <div class="modal-overlay" onclick="closeModal('cart-modal')"></div>
         <div class="modal-content">
@@ -230,10 +149,7 @@
                 <button class="close-btn" onclick="closeModal('cart-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="cart-items" class="cart-items">
-                    <!-- Cart Items injected here -->
-                    <p class="empty-cart-msg">Your cart is empty.</p>
-                </div>
+                <div id="cart-items" class="cart-items"></div>
                 <div class="total-section">
                     <span>Total:</span>
                     <span id="cart-total-price" class="total-price">$0.00</span>
@@ -246,7 +162,6 @@
         </div>
     </div>
 
-    <!-- Checkout Modal -->
     <div id="checkout-modal" class="modal hidden">
         <div class="modal-overlay" onclick="closeModal('checkout-modal')"></div>
         <div class="modal-content">
@@ -269,7 +184,6 @@
                         <label>Delivery Address</label>
                         <textarea id="cust-address" required placeholder="Full Address"></textarea>
                     </div>
-
                     <h4>Payment Method</h4>
                     <div class="payment-options">
                         <label class="payment-option">
@@ -285,12 +199,10 @@
                             <span class="pay-label">Cash on Delivery</span>
                         </label>
                     </div>
-
                     <div class="total-section">
                         <span>Total to Pay:</span>
                         <span id="checkout-total" class="total-price">$0.00</span>
                     </div>
-
                     <button type="submit" class="btn btn-primary full-width" style="margin-top: 20px;">Place
                         Order</button>
                 </form>

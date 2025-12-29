@@ -4,29 +4,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vita Flowers | Exquisite Bouquets in Elmwood Park, IL</title>
-    <meta name="description"
-        content="Premium floral arrangements and custom bouquets at Vita Flowers, Elmwood Park, IL. Order fresh flowers for delivery or pickup.">
+    <title>Shop | Vita Flowers</title>
+    <meta name="description" content="Browse our full collection of premium floral arrangements.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
+    <style>
+        /* Shop Specific Styles */
+        .shop-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 40px;
+            padding: 60px 0;
+            margin-top: 80px;
+            /* Offset fixed header */
+        }
+
+        .sidebar {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--color-accent-light);
+            padding-bottom: 10px;
+        }
+
+        .filter-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .filter-list li {
+            margin-bottom: 15px;
+        }
+
+        .filter-btn {
+            background: none;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: color 0.3s;
+            text-align: left;
+            width: 100%;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .shop-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <header class="site-header">
+    <header class="site-header solid">
         <div class="container header-container">
             <div class="logo">
-                Vita<span class="accent">Flowers</span>
+                <a href="index.html" style="text-decoration:none; color:inherit;">Vita<span
+                        class="accent">Flowers</span></a>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="shop.html" class="active">Shop</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                     <li>
@@ -45,111 +105,40 @@
     </header>
 
     <main>
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <div class="hero-content">
-                <span class="subtitle">Handcrafted in Illinois</span>
-                <h1>Making Moments <br><em>Unforgettable</em></h1>
-                <p>Premium floral arrangements for weddings, events, and everyday joy.</p>
-                <div class="hero-buttons">
-                    <a href="shop.html" class="btn btn-primary">View Collection</a>
-                </div>
-            </div>
+        <section class="page-hero">
+            <!-- Text removed for cleaner look -->
         </section>
 
-        <!-- About Section -->
-        <section id="about" class="about-section">
+        <div class="breadcrumbs-strip">
             <div class="container">
-                <div class="section-header text-center">
-                    <h2>Our Passion for Petals</h2>
-                    <p class="section-desc">Creating art with nature's finest colors.</p>
-                </div>
-                <div class="about-grid">
-                    <div class="about-text">
-                        <p>Welcome to our floral studio based in the heart of Illinois. We believe that every bouquet
-                            tells a story. Whether it's a grand celebration or a small gesture of love, we craft each
-                            arrangement with precision, care, and a touch of magic.</p>
-                        <p>Using only the freshest seasonal blooms, we ensure that your flowers arrive vibrant and
-                            fragrant, ready to brighten any space.</p>
-                    </div>
-                    <!-- Values / Features -->
-                    <div class="features-grid">
-                        <div class="feature-item">
-                            <h3>Fresh Blooms</h3>
-                            <p>Sourced daily for maximum longevity.</p>
-                        </div>
-                        <div class="feature-item">
-                            <h3>Uniques Designs</h3>
-                            <p>Tailored to your specific style and occasion.</p>
-                        </div>
-                        <div class="feature-item">
-                            <h3>Local Love</h3>
-                            <p>Serving the Illinois community with pride.</p>
-                        </div>
-                    </div>
-                </div>
+                <a href="index.html">Home</a> &gt; <span>Shop</span>
             </div>
-        </section>
+        </div>
 
-        <!-- Product Gallery / Shop Preview -->
-        <section id="shop" class="shop-section">
-            <div class="container">
-                <div class="section-header text-center">
-                    <h2>Premium Collections</h2>
-                    <p class="section-desc">Hand-picked favorites for your special moments.</p>
+        <div class="container shop-layout animate-entrance">
+            <aside class="sidebar">
+                <h3>Occasions</h3>
+                <ul class="filter-list">
+                    <li><button class="filter-btn active" onclick="filterShop('all')">All Bouquets</button></li>
+                    <li><button class="filter-btn" onclick="filterShop('birthday')">Birthday</button></li>
+                    <li><button class="filter-btn" onclick="filterShop('anniversary')">Anniversary</button></li>
+                    <li><button class="filter-btn" onclick="filterShop('romance')">Romance</button></li>
+                    <li><button class="filter-btn" onclick="filterShop('sympathy')">Sympathy</button></li>
+                    <li><button class="filter-btn" onclick="filterShop('mother-day')">Mother's Day</button></li>
+                </ul>
+            </aside>
+
+            <section class="shop-grid">
+                <div class="section-header">
+                    <h2 id="shop-title">All Bouquets</h2>
+                    <p>Find the perfect arrangement.</p>
                 </div>
-
-                <div id="product-grid" class="product-grid">
-                    <!-- Products will be injected here via JS -->
-                    <!-- Fallback content if JS fails -->
-                    <div class="product-card">
-                        <div class="img-wrapper">
-                            <!-- Placeholder -->
-                            <div class="placeholder-img">Loading...</div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Spring Radiance</h3>
-                            <p class="price">$55.00</p>
-                        </div>
-                    </div>
+                <!-- Reusing the product-grid ID for shared logic OR we can give it a new one and update logic -->
+                <div id="shop-products-grid" class="product-grid">
+                    <!-- Products Injected Here -->
                 </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="contact-section">
-            <div class="container contact-container">
-                <div class="contact-info">
-                    <h2>Get in Touch</h2>
-                    <p>Have a question about an order? We'd love to hear from you.</p>
-
-                    <ul class="contact-details">
-                        <li>
-                            <strong>Location:</strong>
-                            <span>2410 N 77th AVE, Elmwood Park, IL</span>
-                        </li>
-                        <li>
-                            <strong>Phone:</strong>
-                            <a href="tel:+17348588724">734-858-8724</a>
-                        </li>
-                        <li>
-                            <strong>Email:</strong>
-                            <a href="mailto:troxymchukviktoria@gmail.com">troxymchukviktoria@gmail.com</a>
-                        </li>
-                    </ul>
-
-                    <div class="social-links">
-                        <a href="#">Instagram</a>
-                        <a href="#">Facebook</a>
-                    </div>
-                </div>
-                <!-- Removed default contact form to prioritize checkout flow, kept info -->
-                <div class="contact-image-decoration">
-                    <!-- Optional: Put an image here or just leave the text details centered/styled differently later -->
-                    <img src="hero_flowers_background.png" alt="Flowers" style="border-radius: 8px; opacity: 0.8;">
-                </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 
     <footer>
@@ -196,6 +185,7 @@
         </div>
     </footer>
 
+    <!-- SHARED MODALS (Ideally these would be templates, but duplication for now is fine) -->
     <!-- Customization Modal -->
     <div id="custom-modal" class="modal hidden">
         <div class="modal-overlay" onclick="closeModal('custom-modal')"></div>
@@ -206,9 +196,7 @@
             </div>
             <div class="modal-body">
                 <p class="modal-subtitle">Enhance your bouquet with our premium add-ons.</p>
-                <div id="addons-list" class="addons-list">
-                    <!-- Add-ons injected via JS -->
-                </div>
+                <div id="addons-list" class="addons-list"></div>
                 <div class="total-section">
                     <span>Total Estimate:</span>
                     <span id="modal-total-price" class="total-price">$0.00</span>
@@ -230,10 +218,7 @@
                 <button class="close-btn" onclick="closeModal('cart-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="cart-items" class="cart-items">
-                    <!-- Cart Items injected here -->
-                    <p class="empty-cart-msg">Your cart is empty.</p>
-                </div>
+                <div id="cart-items" class="cart-items"></div>
                 <div class="total-section">
                     <span>Total:</span>
                     <span id="cart-total-price" class="total-price">$0.00</span>
@@ -300,6 +285,44 @@
 
     <script src="js/data.js"></script>
     <script src="main.js"></script>
+    <script>
+        // Shop Page Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial Render: All
+            const container = document.getElementById('shop-products-grid');
+            if (container) {
+                renderProductGrid(container, products);
+
+                // Check URL params for category
+                const urlParams = new URLSearchParams(window.location.search);
+                const cat = urlParams.get('category');
+                if (cat) {
+                    filterShop(cat);
+                }
+            }
+        });
+
+        function filterShop(category) {
+            const container = document.getElementById('shop-products-grid');
+            const title = document.getElementById('shop-title');
+
+            // Update Active Button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            // Find button that matches
+            const buttons = Array.from(document.querySelectorAll('.filter-btn'));
+            const activeBtn = buttons.find(b => b.textContent.toLowerCase().includes(category === 'mother-day' ? "mother" : category) || (category === 'all' && b.textContent.includes('All')));
+            if (activeBtn) activeBtn.classList.add('active');
+
+            if (category === 'all') {
+                renderProductGrid(container, products);
+                title.textContent = "All Bouquets";
+            } else {
+                const filtered = products.filter(p => p.categories.includes(category));
+                renderProductGrid(container, filtered);
+                title.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ') + " Collection";
+            }
+        }
+    </script>
 </body>
 
 </html>
