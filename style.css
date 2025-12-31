@@ -597,10 +597,13 @@ footer {
 
     .main-nav a:hover,
     .main-nav a.active {
-        color: var(--color-primary);
+        color: var(--color-heading);
+        /* Dark text for visibility */
         transform: none;
         background: transparent;
         box-shadow: none;
+        border: none;
+        outline: none;
     }
 
     /* Underline animation for premium feel */
