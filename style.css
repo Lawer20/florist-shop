@@ -88,7 +88,8 @@ img {
     border-color: var(--color-primary);
     background-color: var(--color-primary);
     color: white;
-    box-shadow: 0 4px 15px rgba(216, 167, 177, 0.4);
+    box-shadow: 0 4px 15px rgba(216, 167, 177, 0.25);
+    /* Softer colored shadow */
 }
 
 .btn-primary:hover {
@@ -320,9 +321,11 @@ img {
 
 .product-card {
     background: white;
-    border-radius: 8px;
+    border-radius: 4px;
+    /* Slightly sharper for editorial look */
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    /* Very subtle, deep shadow */
     transition: transform 0.3s ease;
 }
 
@@ -544,44 +547,107 @@ footer {
     .main-nav {
         position: fixed;
         top: 0;
-        right: -100%;
-        width: 70%;
-        max-width: 300px;
+        left: 0;
+        width: 100%;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        padding: 80px 20px;
-        transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         z-index: 100;
-        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
-        display: block;
-        /* Override none */
+        box-shadow: none;
     }
 
     .main-nav.open {
-        right: 0;
+        opacity: 1;
+        visibility: visible;
     }
 
     .main-nav ul {
         flex-direction: column;
         align-items: center;
-        gap: 30px;
+        gap: 40px;
+        transform: translateY(20px);
+        transition: transform 0.5s ease;
+    }
+
+    .main-nav.open ul {
+        transform: translateY(0);
+    }
+
+    /* Premium Typography for Menu */
+    .main-nav a {
+        font-family: var(--font-heading);
+        font-size: 2rem;
+        font-weight: 500;
+        color: var(--color-heading);
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        position: relative;
+    }
+
+    .main-nav a:hover,
+    .main-nav a.active {
+        color: var(--color-primary);
+        transform: none;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    /* Underline animation for premium feel */
+    .main-nav a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 50%;
+        background-color: var(--color-primary);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    .main-nav a:hover::after {
+        width: 100%;
+    }
+
+    /* Hide cart button in main menu for cleaner look, assume header cart icon */
+    .btn-cart {
+        font-size: 1.2rem;
+        border: 2px solid var(--color-heading);
+        color: var(--color-heading);
+        padding: 10px 30px;
+        border-radius: 50px;
     }
 
     .mobile-menu-btn {
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
-        width: 30px;
-        height: 25px;
-        background: transparent;
+        justify-content: center;
+        gap: 6px;
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         border: none;
         cursor: pointer;
-        padding: 0;
+        padding: 8px;
         z-index: 110;
         /* Above nav */
-        position: relative;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        align-items: center;
     }
 
     .mobile-menu-btn span {
@@ -1097,49 +1163,50 @@ footer {
 /* --- Mobile Visual Polish --- */
 @media (max-width: 500px) {
 
-    /* Two Column Grid for Shop */
     .product-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
+        gap: 20px;
+        /* More breathing room */
     }
 
     .product-card {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        box-shadow: none;
+        /* Remove card shadow on mobile for cleaner flat look */
+        background: transparent;
     }
 
     .img-wrapper {
-        height: 180px;
-        /* Proportional height for smaller cards */
+        height: auto;
+        aspect-ratio: 3/4;
+        /* Standard editorial aspect ratio */
+        border-radius: 4px;
+        margin-bottom: 8px;
     }
 
     .product-info {
-        padding: 10px;
+        padding: 5px 0;
+        /* Remove side padding */
+        text-align: left;
+        /* Editorial alignment */
     }
 
     .product-info h3 {
-        font-size: 1rem;
-        /* Enable wrapping if needed */
-        line-height: 1.3;
-        margin-bottom: 4px;
-        min-height: 2.6rem;
-        /* Align items if titles vary */
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 2px;
+        min-height: auto;
     }
 
     .product-info .price {
-        font-size: 0.95rem;
-        margin-bottom: 10px;
+        font-size: 0.9rem;
+        color: #666;
+        /* Subtler price */
+        font-weight: 400;
     }
 
-    /* Smaller buttons for tighter spaces */
+    /* Hide 'Customize' button on grid to declutter, user taps image */
     .product-info .btn-secondary {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-        width: 100%;
+        display: none;
     }
 
     /* Reduce huge hero text */
@@ -1183,5 +1250,20 @@ footer {
     .filter-btn.active {
         background: var(--color-primary);
         color: white;
+    }
+
+    /* Mobile Logo Polish */
+    .logo {
+        font-size: 1.8rem;
+        /* Smaller, more elegant */
+        border: none;
+        /* Cleaner look without box */
+        padding: 0;
+        letter-spacing: 1px;
+    }
+
+    /* Ensure solid header logo matches */
+    .site-header.solid .logo {
+        border: none;
     }
 }
