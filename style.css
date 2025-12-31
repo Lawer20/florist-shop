@@ -1249,7 +1249,9 @@ footer {
 
     .filter-btn.active {
         background: var(--color-primary);
-        color: white;
+        color: var(--color-heading);
+        /* Improved contrast from white */
+        font-weight: 600;
     }
 
     /* Mobile Logo Polish */
