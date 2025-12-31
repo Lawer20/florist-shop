@@ -1252,8 +1252,8 @@ footer {
 
     .filter-btn.active {
         background: var(--color-primary);
-        color: var(--color-heading);
-        /* Improved contrast from white */
+        color: #2C3E50 !important;
+        /* Force dark text color to fix invisible text bug */
         font-weight: 600;
     }
 
