@@ -1,0 +1,21 @@
+{
+  "name": "Vita Flowers",
+  "short_name": "VitaFlowers",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FCFDFD",
+  "theme_color": "#D8A7B1",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
