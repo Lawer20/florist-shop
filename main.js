@@ -26,14 +26,14 @@ function renderProductGrid(container, items) {
     if (!container) return;
 
     container.innerHTML = items.map(product => `
-        <div class="product-card">
+        <div class="product-card" onclick="openModal(${product.id})" style="cursor: pointer;">
             <div class="img-wrapper">
                 <img src="${product.image}" alt="${product.title}" loading="lazy">
             </div>
             <div class="product-info">
                 <h3>${product.title}</h3>
                 <p class="price">$${product.price.toFixed(2)}</p>
-                <button class="btn btn-secondary" style="color: #333; border-color: #333;" onclick="openModal(${product.id})">Customize</button>
+                <button class="btn btn-secondary" style="color: #333; border-color: #333;" onclick="event.stopPropagation(); openModal(${product.id})">Customize</button>
             </div>
         </div>
     `).join('');
