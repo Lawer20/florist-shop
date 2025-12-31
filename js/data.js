@@ -21,7 +21,7 @@ const products = [
         id: 3,
         title: "Velvet Dream",
         price: 95.00,
-        image: "bouquet_elegant_roses.png", // Reusing image for demo
+        image: "bouquet_velvet_dream_1767146999117.png",
         categories: ["romance", "valentines"],
         featured: true,
         description: "Soft pink and cream roses wrapped in luxurious velvet paper."
@@ -30,7 +30,7 @@ const products = [
         id: 4,
         title: "Pure Elegance",
         price: 75.00,
-        image: "bouquet_elegant_roses.png",
+        image: "bouquet_pure_elegance_1767147012184.png",
         categories: ["sympathy", "anniversary"],
         featured: false,
         description: "Classic white roses and lilies, perfect for expressing sincere sentiments."
