@@ -39,7 +39,7 @@ const products = [
         id: 5,
         title: "Wildflower Whisper",
         price: 60.00,
-        image: "bouquet_spring_mix.png",
+        image: "bouquet_spring_mix.png", // TODO: Replace with unique wildflower image
         categories: ["birthday", "just-because"],
         featured: false,
         description: "A rustic, hand-tied bunch of field flowers for a natural look."
@@ -48,7 +48,7 @@ const products = [
         id: 6,
         title: "Golden Hour",
         price: 110.00,
-        image: "bouquet_spring_mix.png",
+        image: "bouquet_spring_mix.png", // TODO: Replace with unique golden/sunset bouquet image
         categories: ["mother-day", "thank-you"],
         featured: true, // Let's feature 4 items
         description: "Warm yellow and orange blooms capturing the glow of sunset."

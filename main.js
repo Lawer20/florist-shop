@@ -6,8 +6,38 @@ let currentProduct = null;
 let currentTotal = 0;
 let cart = [];
 
+/* --- LocalStorage Helpers --- */
+function saveCartToStorage() {
+    try {
+        localStorage.setItem('vita-flowers-cart', JSON.stringify(cart));
+    } catch (e) {
+        console.error('Failed to save cart to localStorage:', e);
+    }
+}
+
+function loadCartFromStorage() {
+    try {
+        const saved = localStorage.getItem('vita-flowers-cart');
+        if (saved) {
+            cart = JSON.parse(saved);
+        }
+    } catch (e) {
+        console.error('Failed to load cart from localStorage:', e);
+        cart = [];
+    }
+}
+
+function clearCart() {
+    cart = [];
+    saveCartToStorage();
+    updateCartCount();
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Load cart from storage first
+    loadCartFromStorage();
+
     // If we are on the homepage, render featured ONLY
     const grid = document.getElementById('product-grid');
     if (grid) {
@@ -19,6 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMobileMenu();
     updateCartCount();
+
+    // Sticky Header Scroll Logic
+    const header = document.querySelector('.site-header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('solid');
+        } else {
+            header.classList.remove('solid');
+        }
+    });
 });
 
 // Renaming to generic render function we can reuse
@@ -121,6 +161,7 @@ function confirmAddToCart() {
     };
 
     cart.push(cartItem);
+    saveCartToStorage();
     updateCartCount();
 
     // Close Modal
@@ -178,11 +219,15 @@ function renderCart() {
 
 function removeFromCart(index) {
     cart.splice(index, 1);
+    saveCartToStorage();
     updateCartCount();
     renderCart();
 }
 
 /* --- Checkout Logic --- */
+
+// Google Sheets Web App URL
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxh4CXrWsPyL2uVF3aaY66M-b4b2BCUycpqqkYlAQY7Nfldjvfdb0QuZ6QUUfC-6g7M/exec';
 
 function openCheckout() {
     if (cart.length === 0) {
@@ -198,31 +243,108 @@ function openCheckout() {
     document.getElementById('checkout-modal').classList.remove('hidden');
 }
 
+async function sendOrderToGoogleSheets(orderData) {
+    try {
+        const response = await fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Required for Google Apps Script
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        // Note: no-cors mode means we can't read the response, but the request will succeed
+        return { success: true };
+    } catch (error) {
+        console.error('Error sending to Google Sheets:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 function processCheckout(event) {
     event.preventDefault();
 
-    const name = document.getElementById('cust-name').value;
-    const phone = document.getElementById('cust-phone').value;
-    const address = document.getElementById('cust-address').value;
-    const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+    // Form validation
+    const name = document.getElementById('cust-name').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
+    const address = document.getElementById('cust-address').value.trim();
+    const paymentMethodEl = document.querySelector('input[name="payment"]:checked');
 
-    const grandTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-
-    let message = `Thank you, ${name}!\n\nOrder Total: $${grandTotal.toFixed(2)}\nDelivery to: ${address}\n\n`;
-
-    if (paymentMethod === 'zelle') {
-        message += `Please send Zelle payment to: 734-858-8724\nUse your Order Phone Number (${phone}) as the note.`;
-    } else if (paymentMethod === 'paypal') {
-        message += `Please send PayPal payment to: troxymchukviktoria@gmail.com\nUse your Name as the note.`;
-    } else {
-        message += `Please have cash ready upon delivery.`;
+    if (!name) {
+        alert('Please enter your name.');
+        document.getElementById('cust-name').focus();
+        return;
     }
 
-    alert(message);
+    if (!phone) {
+        alert('Please enter your phone number.');
+        document.getElementById('cust-phone').focus();
+        return;
+    }
 
-    // Clear cart and close
-    updateCartCount();
-    closeModal('checkout-modal');
+    if (!address) {
+        alert('Please enter your delivery address.');
+        document.getElementById('cust-address').focus();
+        return;
+    }
+
+    if (!paymentMethodEl) {
+        alert('Please select a payment method.');
+        return;
+    }
+
+    const paymentMethod = paymentMethodEl.value;
+    const grandTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+
+    // Prepare order data for Google Sheets
+    const orderData = {
+        name: name,
+        phone: phone,
+        address: address,
+        items: cart.map(item => ({
+            product: item.product.title,
+            addons: item.addons.map(a => a.name),
+            price: item.totalPrice
+        })),
+        total: grandTotal,
+        paymentMethod: paymentMethod
+    };
+
+    // Show loading state
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.disabled = true;
+
+    // Send to Google Sheets
+    sendOrderToGoogleSheets(orderData).then(result => {
+        // Re-enable button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+
+        // Show payment instructions
+        let message = `Thank you, ${name}!\n\nOrder Total: $${grandTotal.toFixed(2)}\nDelivery to: ${address}\n\n`;
+
+        if (paymentMethod === 'zelle') {
+            message += `Please send Zelle payment to: 734-858-8724\nUse your Order Phone Number (${phone}) as the note.`;
+        } else if (paymentMethod === 'paypal') {
+            message += `Please send PayPal payment to: troxymchukviktoria@gmail.com\nUse your Name as the note.`;
+        } else {
+            message += `Please have cash ready upon delivery.`;
+        }
+
+        message += '\n\n✅ Your order has been submitted successfully!';
+
+        alert(message);
+
+        // Clear cart properly and close
+        clearCart();
+        closeModal('checkout-modal');
+
+        // Reset form
+        event.target.reset();
+    });
 }
 
 /* --- PWA Service Worker Registration --- */

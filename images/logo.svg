@@ -1,0 +1,14 @@
+<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Minimalist Botanical Art -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Stylized Leaf Stem -->
+    <path d="M15 65 C 20 50, 40 45, 35 30" />
+    <path d="M35 30 C 30 20, 15 25, 10 35 C 10 45, 25 50, 35 30" />
+    <path d="M35 30 C 40 15, 60 15, 65 30 C 65 45, 45 45, 35 30" />
+    <path d="M35 30 C 50 25, 65 35, 60 55 C 55 75, 40 65, 35 30" />
+  </g>
+  
+  <!-- Elegant Typography -->
+  <text x="75" y="45" font-family="'Playfair Display', serif" font-size="24" font-weight="600" fill="currentColor">V.A.Y</text>
+  <text x="75" y="65" font-family="'Montserrat', sans-serif" font-size="12" letter-spacing="4" font-weight="300" fill="currentColor">STUDIO</text>
+</svg>
