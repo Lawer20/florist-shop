@@ -144,13 +144,19 @@ img {
 }
 
 .header-logo-img {
-    height: 90px;
+    height: 120px;
+    transition: all 0.3s ease;
     width: auto;
     display: block;
 }
 
 .site-header.solid .header-logo-img {
-    height: 70px;
+    height: 80px;
+}
+
+/* Invert logo to white when header is transparent (on hero) */
+.site-header:not(.solid) .header-logo-img {
+    filter: brightness(0) invert(1);
 }
 
 .footer-logo {
