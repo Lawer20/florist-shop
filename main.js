@@ -52,13 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sticky Header Scroll Logic
     const header = document.querySelector('.site-header');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('solid');
-        } else {
-            header.classList.remove('solid');
-        }
-    });
+    if (header && header.dataset.scroll === 'toggle') {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('solid');
+            } else {
+                header.classList.remove('solid');
+            }
+        });
+    }
 });
 
 // Renaming to generic render function we can reuse
