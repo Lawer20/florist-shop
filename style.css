@@ -124,12 +124,12 @@ img {
 /* --- Header --- */
 .site-header {
     padding: 20px 0;
-    position: absolute;
+    position: fixed;
     width: 100%;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     background: transparent;
-    /* Overlay on hero */
+    transition: all 0.3s ease;
 }
 
 .header-container {
@@ -174,7 +174,6 @@ img {
 
 /* Solid Header Variant for Sub-pages */
 .site-header.solid {
-    position: sticky;
     background: white;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     padding: 10px 0;
@@ -678,146 +677,148 @@ footer {
         position: relative;
         transform-origin: 1px;
     }
+}
 
-    /* --- Sub-page Styles --- */
+/* --- Sub-page Styles --- */
 
+.page-hero {
+    height: 300px;
+    background: url('images/hero_flowers_background.png') center/cover no-repeat;
+    /* Fixed header sits on top, so we don't need negative margin */
+    margin-top: 0;
+    padding-top: 140px;
+    margin-bottom: 60px;
+    position: relative;
+}
+
+/* Add a subtle overlay to the hero to make logo pop */
+.page-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.page-hero h1 {
+    display: none;
+    /* Hide text as requested "inscription not needed" */
+}
+
+.page-hero h1 {
+    display: none;
+}
+
+/* Shop Layout polish */
+.shop-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 50px;
+    padding-bottom: 100px;
+}
+
+.sidebar {
+    background: #fff;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    position: sticky;
+    top: 120px;
+    border-right: 1px solid #eee;
+    height: fit-content;
+}
+
+.sidebar h3 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--color-accent-light);
+    color: var(--color-heading);
+}
+
+.filter-btn {
+    padding: 12px 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+    color: #666;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    color: var(--color-primary);
+    padding-left: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* About Polish */
+.about-text {
+    max-width: 700px;
+    margin: 0 auto 60px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.about-text p {
+    margin-bottom: 1.5rem;
+}
+
+/* Contact Polish */
+.contact-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    background: #fff;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+}
+
+.contact-info h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.contact-details li {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fdfdfd;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+}
+
+@media (max-width: 768px) {
     .page-hero {
         height: 250px;
-        background: url('hero_flowers_background.png') center/cover no-repeat;
-        /* Removed flex text centering since we are removing text */
-        margin-top: -80px;
-        /* Pull behind header */
-        padding-top: 80px;
-        margin-bottom: 60px;
-        position: relative;
-    }
-
-    /* Add a subtle overlay to the hero to make logo pop */
-    .page-hero::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
     }
 
     .page-hero h1 {
-        display: none;
-        /* Hide text as requested "inscription not needed" */
+        font-size: 2.5rem;
     }
 
-    .page-hero h1 {
-        display: none;
-    }
-
-    /* Shop Layout polish */
     .shop-layout {
-        display: grid;
-        grid-template-columns: 250px 1fr;
-        gap: 50px;
-        padding-bottom: 100px;
+        grid-template-columns: 1fr;
     }
 
     .sidebar {
-        background: #fff;
-        padding: 0;
-        border-radius: 0;
-        box-shadow: none;
-        position: sticky;
-        top: 120px;
-        border-right: 1px solid #eee;
-        height: fit-content;
-    }
-
-    .sidebar h3 {
-        font-family: var(--font-heading);
-        font-size: 1.8rem;
-        margin-bottom: 30px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid var(--color-accent-light);
-        color: var(--color-heading);
-    }
-
-    .filter-btn {
-        padding: 12px 0;
-        font-size: 1.1rem;
-        border-bottom: 1px solid transparent;
-        transition: all 0.3s ease;
-        color: #666;
-    }
-
-    .filter-btn:hover,
-    .filter-btn.active {
-        color: var(--color-primary);
-        padding-left: 10px;
+        border-right: none;
         border-bottom: 1px solid #eee;
+        position: static;
+        margin-bottom: 40px;
     }
 
-    /* About Polish */
-    .about-text {
-        max-width: 700px;
-        margin: 0 auto 60px;
-        text-align: center;
-        font-size: 1.1rem;
-    }
-
-    .about-text p {
-        margin-bottom: 1.5rem;
-    }
-
-    /* Contact Polish */
     .contact-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        align-items: center;
-        background: #fff;
-        padding: 50px;
-        border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+        grid-template-columns: 1fr;
+        padding: 20px;
     }
+}
 
-    .contact-info h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-    }
-
-    .contact-details li {
-        font-size: 1.1rem;
-        margin-bottom: 20px;
-        padding: 15px;
-        background: #fdfdfd;
-        border-radius: 8px;
-        border: 1px solid #f0f0f0;
-    }
-
-    @media (max-width: 768px) {
-        .page-hero {
-            height: 250px;
-        }
-
-        .page-hero h1 {
-            font-size: 2.5rem;
-        }
-
-        .shop-layout {
-            grid-template-columns: 1fr;
-        }
-
-        .sidebar {
-            border-right: none;
-            border-bottom: 1px solid #eee;
-            position: static;
-            margin-bottom: 40px;
-        }
-
-        .contact-container {
-            grid-template-columns: 1fr;
-            padding: 20px;
-        }
-    }
+@media (max-width: 768px) {
 
     .about-grid,
     .contact-container {
