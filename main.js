@@ -97,23 +97,63 @@ function initMobileMenu() {
     }
 }
 
-/* --- Modal Logic --- */
+
+/* --- Size Logic --- */
+const SIZES = [
+    { id: 'standard', name: 'Standard (12 Stems)', multiplier: 1.0 },
+    { id: 'deluxe', name: 'Deluxe (24 Stems)', multiplier: 1.7 },
+    { id: 'premium', name: 'Premium (36 Stems)', multiplier: 2.4 }
+];
+
+let currentSize = SIZES[0];
 
 function openModal(productId) {
     currentProduct = products.find(p => p.id === productId);
     if (!currentProduct) return;
 
     // Reset State
+    currentSize = SIZES[0]; // Reset to Standard
     currentTotal = currentProduct.price;
 
     // UI Updates
     document.getElementById('modal-product-title').textContent = `Customize: ${currentProduct.title}`;
 
+    renderSizes();
     renderAddons();
-    updateTotalDisplay();
+    updateTotal(); // Calc total with default size
 
     document.getElementById('custom-modal').classList.remove('hidden');
 }
+
+function renderSizes() {
+    const list = document.getElementById('size-options');
+    if (!list) return;
+
+    list.innerHTML = SIZES.map(size => {
+        const price = (currentProduct.price * size.multiplier).toFixed(0);
+        const isSelected = size.id === currentSize.id ? 'active' : '';
+
+        return `
+        <div class="size-option ${isSelected}" onclick="selectSize('${size.id}')">
+            <span class="size-name">${size.name}</span>
+            <span class="size-price">$${price}</span>
+        </div>
+        `;
+    }).join('');
+}
+
+function selectSize(sizeId) {
+    currentSize = SIZES.find(s => s.id === sizeId);
+
+    // Update visual selection
+    document.querySelectorAll('.size-option').forEach(el => el.classList.remove('active'));
+    // Simple way to find the clicked one, or re-render. Re-render is safer for state sync but let's just re-render to be safe and fast? 
+    // Actually re-rendering sizes is fine.
+    renderSizes();
+
+    updateTotal();
+}
+
 
 function renderAddons() {
     const list = document.getElementById('addons-list');
@@ -142,7 +182,8 @@ function updateTotal() {
         if (addon) addonsNative += addon.price;
     });
 
-    currentTotal = currentProduct.price + addonsNative;
+    const basePrice = currentProduct.price * currentSize.multiplier;
+    currentTotal = basePrice + addonsNative;
     updateTotalDisplay();
 }
 
@@ -162,6 +203,7 @@ function confirmAddToCart() {
     const cartItem = {
         id: Date.now(), // simple unique id
         product: currentProduct,
+        size: currentSize, // Store selected size
         addons: selectedAddons,
         totalPrice: currentTotal
     };
@@ -210,6 +252,7 @@ function renderCart() {
             <img src="${item.product.image}" class="cart-item-img" alt="${item.product.title}">
             <div class="cart-item-details">
                 <span class="cart-item-title">${item.product.title}</span>
+                <span class="cart-item-size" style="font-size: 0.85rem; color: #666; display:block;">Size: ${item.size ? item.size.name : 'Standard'}</span>
                 ${addonText ? `<span class="cart-item-addons">${addonText}</span>` : ''}
                 <div style="display:flex; justify-content:space-between; margin-top:5px;">
                      <span class="cart-item-price">$${item.totalPrice.toFixed(2)}</span>
@@ -232,8 +275,8 @@ function removeFromCart(index) {
 
 /* --- Checkout Logic --- */
 
-// Google Sheets Web App URL
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxh4CXrWsPyL2uVF3aaY66M-b4b2BCUycpqqkYlAQY7Nfldjvfdb0QuZ6QUUfC-6g7M/exec';
+// Google Sheets Web App URL (Version 5 - Specific Fix)
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby89vSJM_7ttQFRljua3DlD4wb14lHz4xPcVDVa101lA_twikPdg4n9Erdh8FsQJNPG/exec';
 
 function openCheckout() {
     if (cart.length === 0) {
@@ -255,7 +298,7 @@ async function sendOrderToGoogleSheets(orderData) {
             method: 'POST',
             mode: 'no-cors', // Required for Google Apps Script
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain',
             },
             body: JSON.stringify(orderData)
         });
@@ -303,18 +346,23 @@ function processCheckout(event) {
     const paymentMethod = paymentMethodEl.value;
     const grandTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
 
-    // Prepare order data for Google Sheets
+    // Prepare order data for Google Sheets (JSON format as expected by script)
     const orderData = {
         name: name,
         phone: phone,
         address: address,
+        // Script expects 'items' as an array of objects
         items: cart.map(item => ({
-            product: item.product.title,
+            product: `${item.product.title} [${item.size ? item.size.name : 'Standard'}]`,
+            // Script logic: `${item.product}${addons} ($${item.price.toFixed(2)})`
+            // We should pass 'addons' as array of strings if script expects it, or handle here.
+            // Script: const addons = item.addons.length > 0 ? ...
             addons: item.addons.map(a => a.name),
             price: item.totalPrice
         })),
         total: grandTotal,
-        paymentMethod: paymentMethod
+        paymentMethod: paymentMethod,
+        timestamp: new Date().toISOString()
     };
 
     // Show loading state
@@ -330,7 +378,7 @@ function processCheckout(event) {
         submitBtn.disabled = false;
 
         // Show Success Modal instead of Alert
-        showSuccessModal(name, grandTotal, paymentMethod, phone);
+        showSuccessModal(name, parseFloat(grandTotal), paymentMethod, phone);
 
         // Clear cart properly and close checkout
         clearCart();
