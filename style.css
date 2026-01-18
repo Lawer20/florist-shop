@@ -150,7 +150,8 @@ img {
     display: block;
 }
 
-.site-header.solid .header-logo-img {
+/* Resize logo on scroll */
+.site-header.scrolled .header-logo-img {
     height: 80px;
 }
 
@@ -173,9 +174,14 @@ img {
 }
 
 /* Solid Header Variant for Sub-pages */
+/* Solid Header (Color Only) */
 .site-header.solid {
     background: white;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Scrolled Header (Size Only) */
+.site-header.scrolled {
     padding: 10px 0;
 }
 
@@ -682,12 +688,12 @@ footer {
 /* --- Sub-page Styles --- */
 
 .page-hero {
-    height: 300px;
+    height: 150px;
     background: url('images/hero_flowers_background.png') center/cover no-repeat;
     /* Fixed header sits on top, so we don't need negative margin */
     margin-top: 0;
-    padding-top: 140px;
-    margin-bottom: 60px;
+    padding-top: 85px;
+    margin-bottom: 30px;
     position: relative;
 }
 
@@ -1028,6 +1034,67 @@ footer {
     border-radius: 0 0 8px 8px;
 }
 
+/* --- Success Modal Specific --- */
+.success-content {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #f0fdf4;
+    color: #16a34a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 20px;
+    animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleUp {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.success-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--color-heading);
+    margin-bottom: 10px;
+}
+
+.payment-box {
+    background: #fdf2f8;
+    border: 1px dashed var(--color-primary-light);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 25px 0;
+    text-align: left;
+}
+
+.payment-box h4 {
+    margin-bottom: 10px;
+    color: var(--color-primary-dark);
+}
+
+.payment-box p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 5px;
+}
+
+.success-actions {
+    margin-top: 30px;
+}
+
 .text-dark {
     color: #333 !important;
     border-color: #ddd !important;
@@ -1184,9 +1251,9 @@ footer {
 @media (max-width: 500px) {
 
     .product-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        /* More breathing room */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        /* 2-column grid for better shopping experience */
     }
 
     .product-card {
@@ -1229,9 +1296,8 @@ footer {
         display: none;
     } */
 
-    /* Reduce huge hero text */
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     /* Adjust form inputs to prevent zoom (16px rule) */

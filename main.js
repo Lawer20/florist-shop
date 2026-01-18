@@ -52,12 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sticky Header Scroll Logic
     const header = document.querySelector('.site-header');
-    if (header && header.dataset.scroll === 'toggle') {
+    if (header) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('solid');
-            } else {
-                header.classList.remove('solid');
+            const isScrolled = window.scrollY > 50;
+
+            // Allow resizing on all pages
+            header.classList.toggle('scrolled', isScrolled);
+
+            // Only toggle transparent/solid color on homepage (or where specified)
+            if (header.dataset.scroll === 'toggle') {
+                header.classList.toggle('solid', isScrolled);
             }
         });
     }
@@ -325,28 +329,48 @@ function processCheckout(event) {
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
 
-        // Show payment instructions
-        let message = `Thank you, ${name}!\n\nOrder Total: $${grandTotal.toFixed(2)}\nDelivery to: ${address}\n\n`;
+        // Show Success Modal instead of Alert
+        showSuccessModal(name, grandTotal, paymentMethod, phone);
 
-        if (paymentMethod === 'zelle') {
-            message += `Please send Zelle payment to: 734-858-8724\nUse your Order Phone Number (${phone}) as the note.`;
-        } else if (paymentMethod === 'paypal') {
-            message += `Please send PayPal payment to: troxymchukviktoria@gmail.com\nUse your Name as the note.`;
-        } else {
-            message += `Please have cash ready upon delivery.`;
-        }
-
-        message += '\n\n✅ Your order has been submitted successfully!';
-
-        alert(message);
-
-        // Clear cart properly and close
+        // Clear cart properly and close checkout
         clearCart();
         closeModal('checkout-modal');
 
         // Reset form
         event.target.reset();
     });
+}
+
+function showSuccessModal(name, total, paymentMethod, phone) {
+    const intro = document.getElementById('success-intro');
+    const instructions = document.getElementById('payment-instructions');
+
+    intro.textContent = `Thank you, ${name}! Your order for $${total.toFixed(2)} has been submitted successfully.`;
+
+    let payHtml = '';
+    if (paymentMethod === 'zelle') {
+        payHtml = `
+            <h4>Zelle Payment</h4>
+            <p>Please send <strong>$${total.toFixed(2)}</strong> to:</p>
+            <p><strong>Phone: 734-858-8724</strong></p>
+            <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">Note: Use your phone number (${phone}) so we can identify your order.</p>
+        `;
+    } else if (paymentMethod === 'paypal') {
+        payHtml = `
+            <h4>PayPal Payment</h4>
+            <p>Please send <strong>$${total.toFixed(2)}</strong> to:</p>
+            <p><strong>Email: florist.vay.studio@gmail.com</strong></p>
+            <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">Note: Use your name (${name}) so we can identify your order.</p>
+        `;
+    } else {
+        payHtml = `
+            <h4>Cash on Delivery</h4>
+            <p>Please have <strong>$${total.toFixed(2)}</strong> ready in cash upon delivery.</p>
+        `;
+    }
+
+    instructions.innerHTML = payHtml;
+    document.getElementById('success-modal').classList.remove('hidden');
 }
 
 /* --- PWA Service Worker Registration --- */

@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=11">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#D8A7B1">
     <link rel="apple-touch-icon" href="images/icon-192.png">
@@ -81,7 +81,7 @@
                         </li>
                         <li>
                             <strong>Email:</strong>
-                            <a href="mailto:troxymchukviktoria@gmail.com">troxymchukviktoria@gmail.com</a>
+                            <a href="mailto:florist.vay.studio@gmail.com">florist.vay.studio@gmail.com</a>
                         </li>
                     </ul>
 
@@ -136,7 +136,7 @@
                     <ul class="footer-links">
                         <li>2410 N 77th AVE<br>Elmwood Park, IL</li>
                         <li><a href="tel:7348588724">734-858-8724</a></li>
-                        <li>troxymchukviktoria@gmail.com</li>
+                        <li>florist.vay.studio@gmail.com</li>
                     </ul>
                 </div>
             </div>
@@ -214,10 +214,36 @@
                 </form>
             </div>
         </div>
+
+        <!-- Success Modal -->
+        <div id="success-modal" class="modal hidden">
+            <div class="modal-overlay" onclick="closeModal('success-modal')"></div>
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="success-content">
+                        <div class="success-icon">✓</div>
+                        <h2 class="success-title">Order Received!</h2>
+                        <p id="success-intro"></p>
+
+                        <div id="payment-instructions" class="payment-box">
+                            <!-- Dynamically filled -->
+                        </div>
+
+                        <p style="color: #666; font-size: 0.9rem;">A confirmation has been sent to our team. We will
+                            contact you shortly if needed.</p>
+
+                        <div class="success-actions">
+                            <button class="btn btn-primary" onclick="closeModal('success-modal')">Got it,
+                                thanks!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/data.js"></script>
-    <script src="main.js?v=2"></script>
+    <script src="main.js?v=5"></script>
 </body>
 
 </html>
