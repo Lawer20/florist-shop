@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMobileMenu();
     updateCartCount();
+    initDatePickers(); // Initialize date restrictions
 
     // Sticky Header Scroll Logic
     const header = document.querySelector('.site-header');
@@ -94,6 +95,38 @@ function initMobileMenu() {
             nav.classList.toggle('open');
             btn.classList.toggle('open'); // for hamburger animation if needed
         });
+    }
+}
+
+/* --- Date/Time Picker Initialization (Flatpickr) --- */
+function initDatePickers() {
+    const dateInput = document.getElementById('cust-date');
+    if (dateInput && typeof flatpickr !== 'undefined') {
+        // Calculate tomorrow's date
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        // Initialize Flatpickr with custom options
+        flatpickr(dateInput, {
+            minDate: tomorrow,
+            defaultDate: tomorrow,
+            dateFormat: "m/d/Y",
+            disableMobile: true, // Use custom picker on mobile too
+            animate: true,
+            locale: {
+                firstDayOfWeek: 0 // Sunday
+            },
+            onChange: function (selectedDates, dateStr) {
+                // Optional: Add any callback logic here
+            }
+        });
+    } else if (dateInput) {
+        // Fallback for when Flatpickr is not loaded
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const minDate = tomorrow.toISOString().split('T')[0];
+        dateInput.setAttribute('min', minDate);
+        dateInput.value = minDate;
     }
 }
 
@@ -313,80 +346,122 @@ async function sendOrderToGoogleSheets(orderData) {
 
 function processCheckout(event) {
     event.preventDefault();
+    // Checkout process started
+    try {
+        // Form validation
+        const name = document.getElementById('cust-name').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+        const address = document.getElementById('cust-address').value.trim();
 
-    // Form validation
-    const name = document.getElementById('cust-name').value.trim();
-    const phone = document.getElementById('cust-phone').value.trim();
-    const address = document.getElementById('cust-address').value.trim();
-    const paymentMethodEl = document.querySelector('input[name="payment"]:checked');
+        // Safety check for stale HTML
+        const dateEl = document.getElementById('cust-date');
+        if (!dateEl) {
+            alert('Please refresh the page (Ctrl+F5). Your browser is using an old version of the site.');
+            return;
+        }
 
-    if (!name) {
-        alert('Please enter your name.');
-        document.getElementById('cust-name').focus();
-        return;
+        const date = dateEl.value;
+        const time = document.getElementById('cust-time').value;
+        const paymentMethodEl = document.querySelector('input[name="payment"]:checked');
+
+        if (!name) {
+            alert('Please enter your name.');
+            document.getElementById('cust-name').focus();
+            return;
+        }
+
+        if (!phone) {
+            alert('Please enter your phone number.');
+            document.getElementById('cust-phone').focus();
+            return;
+        }
+
+        if (!address) {
+            alert('Please enter your delivery address.');
+            document.getElementById('cust-address').focus();
+            return;
+        }
+
+        if (!date) {
+            alert('Please select a preferred date.');
+            document.getElementById('cust-date').focus();
+            return;
+        }
+
+        // Validate date is not today or in the past (extra check beyond HTML min)
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate <= today) {
+            alert('Same-day orders are not available. Please select a date starting from tomorrow.');
+            document.getElementById('cust-date').focus();
+            return;
+        }
+
+        if (!time) {
+            alert('Please select a delivery time.');
+            document.getElementById('cust-time').focus();
+            return;
+        }
+
+        if (!paymentMethodEl) {
+            alert('Please select a payment method.');
+            return;
+        }
+
+        const paymentMethod = paymentMethodEl.value;
+        const grandTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+
+        // Prepare order data for Google Sheets (JSON format as expected by script)
+        const orderData = {
+            name: name,
+            phone: phone,
+            address: address,
+            date: date,
+            time: time,
+            // Script expects 'items' as an array of objects
+            items: cart.map(item => ({
+                product: `${item.product.title} [${item.size ? item.size.name : 'Standard'}]`,
+                // Script logic: `${item.product}${addons} ($${item.price.toFixed(2)})`
+                // We should pass 'addons' as array of strings if script expects it, or handle here.
+                // Script: const addons = item.addons.length > 0 ? ...
+                addons: item.addons.map(a => a.name),
+                price: item.totalPrice
+            })),
+            total: grandTotal,
+            paymentMethod: paymentMethod,
+            timestamp: new Date().toISOString()
+        };
+
+        // Show loading state
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Submitting...';
+        submitBtn.disabled = true;
+
+        // Send to Google Sheets
+        sendOrderToGoogleSheets(orderData).then(result => {
+            // Re-enable button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+
+            // Show Success Modal instead of Alert
+            showSuccessModal(name, parseFloat(grandTotal), paymentMethod, phone);
+
+            // Clear cart properly and close checkout
+            clearCart();
+            closeModal('checkout-modal');
+
+            // Reset form
+            event.target.reset();
+        });
+
+    } catch (err) {
+        alert('Unexpected error in checkout: ' + err.message);
+        console.error(err);
     }
-
-    if (!phone) {
-        alert('Please enter your phone number.');
-        document.getElementById('cust-phone').focus();
-        return;
-    }
-
-    if (!address) {
-        alert('Please enter your delivery address.');
-        document.getElementById('cust-address').focus();
-        return;
-    }
-
-    if (!paymentMethodEl) {
-        alert('Please select a payment method.');
-        return;
-    }
-
-    const paymentMethod = paymentMethodEl.value;
-    const grandTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-
-    // Prepare order data for Google Sheets (JSON format as expected by script)
-    const orderData = {
-        name: name,
-        phone: phone,
-        address: address,
-        // Script expects 'items' as an array of objects
-        items: cart.map(item => ({
-            product: `${item.product.title} [${item.size ? item.size.name : 'Standard'}]`,
-            // Script logic: `${item.product}${addons} ($${item.price.toFixed(2)})`
-            // We should pass 'addons' as array of strings if script expects it, or handle here.
-            // Script: const addons = item.addons.length > 0 ? ...
-            addons: item.addons.map(a => a.name),
-            price: item.totalPrice
-        })),
-        total: grandTotal,
-        paymentMethod: paymentMethod,
-        timestamp: new Date().toISOString()
-    };
-
-    // Show loading state
-    const submitBtn = event.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Submitting...';
-    submitBtn.disabled = true;
-
-    // Send to Google Sheets
-    sendOrderToGoogleSheets(orderData).then(result => {
-        // Re-enable button
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-
-        // Show Success Modal instead of Alert
-        showSuccessModal(name, parseFloat(grandTotal), paymentMethod, phone);
-
-        // Clear cart properly and close checkout
-        clearCart();
-        closeModal('checkout-modal');
-
-        // Reset form
-        event.target.reset();
-    });
 }
 
 function showSuccessModal(name, total, paymentMethod, phone) {

@@ -13,7 +13,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=11">
+    <link rel="stylesheet" href="style.css?v=14">
+    <!-- Flatpickr for styled date picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#D8A7B1">
     <link rel="apple-touch-icon" href="images/icon-192.png">
@@ -286,6 +289,33 @@
                         <textarea id="cust-address" required placeholder="Full Address"></textarea>
                     </div>
 
+                    <h4>Preferred Schedule</h4>
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label>Date</label>
+                            <input type="date" id="cust-date" class="styled-date-input" required>
+                        </div>
+                        <div class="form-group half-width">
+                            <label>Time (Approx.)</label>
+                            <select id="cust-time" class="styled-time-select" required>
+                                <option value="">Select time...</option>
+                                <option value="07:00">7:00 AM</option>
+                                <option value="08:00">8:00 AM</option>
+                                <option value="09:00">9:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                                <option value="19:00">7:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <h4>Payment Method</h4>
                     <div class="payment-options">
                         <label class="payment-option">
@@ -340,7 +370,7 @@
     </div>
 
     <script src="js/data.js"></script>
-    <script src="main.js?v=5"></script>
+    <script src="main.js?v=9"></script>
 </body>
 
 </html>
