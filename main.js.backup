@@ -1,5 +1,14 @@
 // Data is now loaded from js/data.js
 
+/* --- Configuration --- */
+const BACKEND_API_URL = 'http://localhost:5000';
+
+/* --- Stripe --- */
+let stripe = null;
+let stripeElements = null;
+let cardElement = null;
+let currentPaymentIntentId = null;
+
 /* --- State --- */
 let currentProduct = null;
 let currentTotal = 0;
@@ -37,6 +46,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load cart from storage first
     loadCartFromStorage();
 
+    // Initialize Stripe
+    await initStripe();
+
     // If we are on the homepage, render featured ONLY
     const grid = document.getElementById('product-grid');
     if (grid) {
@@ -49,11 +61,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     initMobileMenu();
     updateCartCount();
     initDatePickers(); // Initialize date restrictions
-
-    // Initialize Stripe for card payments (from card_payment.js module)
-    if (typeof initStripe !== 'undefined') {
-        await initStripe();
-    }
 
     // Sticky Header Scroll Logic
     const header = document.querySelector('.site-header');
@@ -459,97 +466,55 @@ function processCheckout(event) {
         const paymentMethod = paymentMethodEl.value;
         const grandTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
 
+        // Prepare order data for Google Sheets (JSON format as expected by script)
+        const orderData = {
+            name: name,
+            phone: phone,
+            address: address,
+            date: date,
+            time: time,
+            // Script expects 'items' as an array of objects
+            items: cart.map(item => ({
+                product: `${item.product.title} [${item.size ? item.size.name : 'Standard'}]`,
+                // Script logic: `${item.product}${addons} ($${item.price.toFixed(2)})`
+                // We should pass 'addons' as array of strings if script expects it, or handle here.
+                // Script: const addons = item.addons.length > 0 ? ...
+                addons: item.addons.map(a => a.name),
+                price: item.totalPrice
+            })),
+            total: grandTotal,
+            paymentMethod: paymentMethod,
+            timestamp: new Date().toISOString()
+        };
+
         // Show loading state
         const submitBtn = event.target.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
-        submitBtn.textContent = paymentMethod === 'card' ? 'Processing payment...' : 'Submitting...';
+        submitBtn.textContent = 'Submitting...';
         submitBtn.disabled = true;
 
-        // Route to appropriate payment handler
-        if (paymentMethod === 'card' && typeof processCardPayment !== 'undefined') {
-            // Prepare order data for card payment
-            const orderData = {
-                name: name,
-                phone: phone,
-                email: document.getElementById('cust-email') ? document.getElementById('cust-email').value.trim() : '',
-                address: address,
-                date: date,
-                time: time
-            };
+        // Send to Google Sheets
+        sendOrderToGoogleSheets(orderData).then(result => {
+            // Re-enable button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
 
-            // Process card payment through Stripe
-            processCardPayment(orderData, cart).then(result => {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
+            // Show Success Modal instead of Alert
+            showSuccessModal(name, parseFloat(grandTotal), paymentMethod, phone);
 
-                if (result.success) {
-                    // Show success modal
-                    showSuccessModal(name, grandTotal, 'card', phone);
+            // Clear cart properly and close checkout
+            clearCart();
+            closeModal('checkout-modal');
 
-                    // Clear cart and close checkout
-                    clearCart();
-                    closeModal('checkout-modal');
-                    event.target.reset();
-                } else {
-                    alert(`Payment failed: ${result.error}\n\nPlease try again or choose a different payment method.`);
-                }
-            }).catch(err => {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                alert('Payment error: ' + err.message);
-            });
-        } else {
-            // Handle traditional payment methods (Zelle/PayPal/Cash) via Google Sheets
-            const orderData = {
-                name: name,
-                phone: phone,
-                address: address,
-                date: date,
-                time: time,
-                // Script expects 'items' as an array of objects
-                items: cart.map(item => ({
-                    product: `${item.product.title} [${item.size ? item.size.name : 'Standard'}]`,
-                    // Script logic: `${item.product}${addons} ($${item.price.toFixed(2)})`
-                    // We should pass 'addons' as array of strings if script expects it, or handle here.
-                    // Script: const addons = item.addons.length > 0 ? ...
-                    addons: item.addons.map(a => a.name),
-                    price: item.totalPrice
-                })),
-                total: grandTotal,
-                paymentMethod: paymentMethod,
-                timestamp: new Date().toISOString()
-            };
-
-            // Show loading state
-            const submitBtn = event.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
-
-            // Send to Google Sheets
-            sendOrderToGoogleSheets(orderData).then(result => {
-                // Re-enable button
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-
-                // Show Success Modal instead of Alert
-                showSuccessModal(name, parseFloat(grandTotal), paymentMethod, phone);
-
-                // Clear cart properly and close checkout
-                clearCart();
-                closeModal('checkout-modal');
-
-                // Reset form
-                event.target.reset();
-            });
-        }
+            // Reset form
+            event.target.reset();
+        });
 
     } catch (err) {
         alert('Unexpected error in checkout: ' + err.message);
         console.error(err);
     }
 }
-
 
 function showSuccessModal(name, total, paymentMethod, phone) {
     const intro = document.getElementById('success-intro');

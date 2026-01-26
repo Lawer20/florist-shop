@@ -1,0 +1,70 @@
+/* --- Card Payment Styles --- */
+.card-element-wrapper {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.card-element-wrapper:focus-within {
+    border-color: var(--color-primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(216, 167, 177, 0.1);
+}
+
+.card-element-wrapper.hidden {
+    display: none;
+}
+
+#card-errors {
+    color: #fa755a;
+    margin-top: 10px;
+    font-size: 14px;
+    display: none;
+}
+
+#card-errors:not(:empty) {
+    display: block;
+    padding: 10px;
+    background: #ffebee;
+    border-radius: 4px;
+    border-left: 3px solid #fa755a;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    border-color: var(--color-primary);
+    background: #f9f9f9;
+}
+
+.payment-option input[type="radio"] {
+    cursor: pointer;
+}
+
+.payment-option input[type="radio"]:checked+.pay-label {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.payment-options {
+    margin-bottom: 20px;
+}
+
+/* Loading state for submit button */
+button[type="submit"]:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
