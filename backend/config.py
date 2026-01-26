@@ -32,7 +32,10 @@ class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     # For production, DATABASE_URL should be provided by hosting platform
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///orders.db')
+    uri = os.getenv('DATABASE_URL', 'sqlite:///orders.db')
+    if uri and uri.startswith('postgres://'):
+        uri = uri.replace('postgres://', 'postgresql://', 1)
+    SQLALCHEMY_DATABASE_URI = uri
 
 # Configuration dictionary
 config = {
