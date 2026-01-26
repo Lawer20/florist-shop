@@ -23,6 +23,7 @@ CORS(app, resources={
     r"/api/*": {
         "origins": [
             app.config['FRONTEND_URL'], 
+            "https://vay-studio.netlify.app",  # Production frontend
             "http://127.0.0.1:5500", 
             "http://localhost:5500",
             "http://127.0.0.1:8000",
