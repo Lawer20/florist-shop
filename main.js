@@ -1,5 +1,8 @@
 // Data is now loaded from js/data.js
 
+// Backend API Configuration
+const BACKEND_API_URL = 'https://florist-shop-production.up.railway.app';
+
 /* --- State --- */
 let currentProduct = null;
 let currentTotal = 0;

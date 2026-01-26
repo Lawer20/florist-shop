@@ -17,6 +17,10 @@
     <!-- Flatpickr for styled date picker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Stripe.js SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <!-- Card Payment Styles -->
+    <link rel="stylesheet" href="payment_styles.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#D8A7B1">
     <link rel="apple-touch-icon" href="images/icon-192.png">
@@ -319,18 +323,29 @@
                     <h4>Payment Method</h4>
                     <div class="payment-options">
                         <label class="payment-option">
-                            <input type="radio" name="payment" value="zelle" checked>
+                            <input type="radio" name="payment" value="card" onchange="handlePaymentMethodChange()"
+                                checked>
+                            <span class="pay-label">💳 Credit/Debit Card</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="zelle" onchange="handlePaymentMethodChange()">
                             <span class="pay-label">Zelle</span>
                         </label>
                         <label class="payment-option">
-                            <input type="radio" name="payment" value="paypal">
+                            <input type="radio" name="payment" value="paypal" onchange="handlePaymentMethodChange()">
                             <span class="pay-label">PayPal</span>
                         </label>
                         <label class="payment-option">
-                            <input type="radio" name="payment" value="cash">
+                            <input type="radio" name="payment" value="cash" onchange="handlePaymentMethodChange()">
                             <span class="pay-label">Cash on Delivery</span>
                         </label>
                     </div>
+
+                    <!-- Card Payment Element (shows when card is selected) -->
+                    <div id="card-element-container" class="card-element-wrapper hidden">
+                        <!-- Stripe card element will be mounted here -->
+                    </div>
+                    <div id="card-errors" class="card-errors" role="alert"></div>
 
                     <div class="total-section">
                         <span>Total to Pay:</span>
@@ -370,6 +385,7 @@
     </div>
 
     <script src="js/data.js"></script>
+    <script src="card_payment.js"></script>
     <script src="main.js?v=9"></script>
 </body>
 
