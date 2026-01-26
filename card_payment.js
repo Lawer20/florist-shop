@@ -3,9 +3,9 @@
  * Handles Stripe integration and card payment processing
  */
 
-// Configuration - Pointing to Production Backend
-const BACKEND_API_URL = 'https://florist-shop-production.up.railway.app';
+// Note: BACKEND_API_URL is defined in main.js
 // For local testing use: 'http://localhost:5000'
+
 
 // Stripe variables
 let stripe = null;
