@@ -1,3 +1,8 @@
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
 :root {
     /* Colors */
     --color-bg: #FCFDFD;

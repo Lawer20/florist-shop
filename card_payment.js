@@ -34,7 +34,6 @@ async function initStripe() {
         const config = await response.json();
         // DEBUG: Alert key prefix
         const keyPrefix = config.stripePublishableKey ? config.stripePublishableKey.substring(0, 7) : 'NONE';
-        alert(`DEBUG: Stripe Config Loaded. Key starts with: ${keyPrefix}`);
 
         if (!config.stripePublishableKey) {
             console.warn('No Stripe key available');
@@ -45,7 +44,6 @@ async function initStripe() {
         // Security Check: Ensure it's a Publishable Key (pk_), not Secret Key (sk_)
         if (config.stripePublishableKey.startsWith('sk_')) {
             console.error('SECURITY ERROR: Secret Key used as Publishable Key!');
-            alert('Configuration Error: The site is using a Stripe Secret Key (sk_...) instead of a Publishable Key (pk_...). Please update STRIPE_PUBLISHABLE_KEY in Railway.');
             hideCardPaymentOption();
             return false;
         }
@@ -57,7 +55,6 @@ async function initStripe() {
         return true;
     } catch (error) {
         console.error('Error initializing Stripe:', error);
-        alert(`DEBUG: Error initializing Stripe: ${error.message}`);
         hideCardPaymentOption();
         return false;
     }
@@ -75,9 +72,7 @@ function hideCardPaymentOption() {
 
 /* --- Card Element Management --- */
 function initCardElement() {
-    alert('DEBUG: initCardElement called');
     if (!stripe || !stripeElements) {
-        alert('DEBUG: Stripe not ready yet (stripe or stripeElements is null)');
         return;
     }
 
@@ -95,7 +90,6 @@ function initCardElement() {
 
     // Only create card element if card payment is selected
     const selectedPayment = document.querySelector('input[name="payment"]:checked');
-    alert(`DEBUG: Selected payment: ${selectedPayment ? selectedPayment.value : 'None'}`);
 
     if (selectedPayment && selectedPayment.value === 'card') {
         // Create and mount card element
@@ -123,11 +117,10 @@ function initCardElement() {
                 hidePostalCode: true
             });
 
-            alert('DEBUG: Mounting card element...');
             cardElement.mount(cardContainer);
             cardContainer.classList.remove('hidden');
         } catch (e) {
-            alert(`DEBUG: Error mounting card: ${e.message}`);
+            console.error('Error mounting card:', e);
         }
 
         // Handle real-time validation errors
@@ -269,3 +262,6 @@ window.initStripe = initStripe;
 window.initCardElement = initCardElement;
 window.handlePaymentMethodChange = handlePaymentMethodChange;
 window.processCardPayment = processCardPayment;
+
+// Initialize on load
+initStripe();
