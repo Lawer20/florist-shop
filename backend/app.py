@@ -18,8 +18,22 @@ app = Flask(__name__)
 env = os.getenv('FLASK_ENV', 'development')
 app.config.from_object(config[env])
 
-# Setup CORS - Allow all origins for debugging
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+# Setup CORS - Allow all origins for debugging with full permissiveness
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
+@app.before_request
+def log_request_info():
+    app.logger.info(f"Incoming Request: {request.method} {request.url}")
+    app.logger.info(f"Headers: {request.headers}")
+    if request.method == 'OPTIONS':
+        app.logger.info("Handling OPTIONS preflight request")
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 # Initialize database
 # Initialize database
