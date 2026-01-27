@@ -1,7 +1,9 @@
 // Data is now loaded from js/data.js
 
 // Backend API Configuration
-const BACKEND_API_URL = 'https://florist-shop-production.up.railway.app';
+// Backend API Configuration
+// NOTE: BACKEND_API_URL is defined in card_payment.js which loads before this file
+// const BACKEND_API_URL = 'https://florist-shop-production.up.railway.app';
 
 /* --- State --- */
 let currentProduct = null;
