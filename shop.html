@@ -369,9 +369,17 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=100"></script>
-    <script src="card_payment.js?v=100"></script>
-    <script src="main.js?v=100"></script>
+    <script src="js/data.js?v=103"></script>
+    <script src="card_payment.js?v=103"></script>
+    <script src="main.js?v=103"></script>
+    <script>
+        // Force unregister stale service workers if they block updates
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(regs => {
+                for (let reg of regs) reg.unregister();
+            });
+        }
+    </script>
     <script>
         // Shop Page Logic
         document.addEventListener('DOMContentLoaded', () => {

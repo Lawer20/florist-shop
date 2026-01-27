@@ -1,11 +1,7 @@
-/* 
- * Card Payment Module for V.A.Y Studio
- * Handles Stripe integration and card payment processing
- */
+console.log("🚀 V.A.Y Studio Payment Module V102 LOADED");
 
-// Note: BACKEND_API_URL is defined in main.js
-// For local testing use: 'http://localhost:5000'
-
+// Backend API Configuration (must be defined here since this loads before main.js)
+const BACKEND_API_URL = 'https://florist-shop-production.up.railway.app';
 
 // Stripe variables
 let stripe = null;
@@ -19,7 +15,7 @@ async function initStripe() {
         // Check if Stripe.js is loaded
         if (typeof Stripe === 'undefined') {
             console.warn('Stripe.js not loaded. Card payments will not be available.');
-            hideCardPaymentOption();
+            // hideCardPaymentOption(); // Disable hiding for debugging
             return false;
         }
 
@@ -27,24 +23,22 @@ async function initStripe() {
         const response = await fetch(`${BACKEND_API_URL}/api/config`);
         if (!response.ok) {
             console.warn('Could not fetch Stripe config. Card payments disabled.');
-            hideCardPaymentOption();
+            // hideCardPaymentOption(); 
             return false;
         }
 
         const config = await response.json();
-        // DEBUG: Alert key prefix
-        const keyPrefix = config.stripePublishableKey ? config.stripePublishableKey.substring(0, 7) : 'NONE';
 
         if (!config.stripePublishableKey) {
             console.warn('No Stripe key available');
-            hideCardPaymentOption();
+            // hideCardPaymentOption();
             return false;
         }
 
         // Security Check: Ensure it's a Publishable Key (pk_), not Secret Key (sk_)
         if (config.stripePublishableKey.startsWith('sk_')) {
             console.error('SECURITY ERROR: Secret Key used as Publishable Key!');
-            hideCardPaymentOption();
+            alert('CRITICAL ERR: STRIPE_SECRET_KEY used in place of PUBLISHABLE_KEY. Fix in Railway env vars.');
             return false;
         }
 
@@ -55,7 +49,7 @@ async function initStripe() {
         return true;
     } catch (error) {
         console.error('Error initializing Stripe:', error);
-        hideCardPaymentOption();
+        // hideCardPaymentOption();
         return false;
     }
 }
