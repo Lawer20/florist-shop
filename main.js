@@ -319,36 +319,8 @@ function removeFromCart(index) {
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby89vSJM_7ttQFRljua3DlD4wb14lHz4xPcVDVa101lA_twikPdg4n9Erdh8FsQJNPG/exec';
 
 /* --- Stripe Initialization --- */
-async function initStripe() {
-    try {
-        // Check if Stripe.js is loaded
-        if (typeof Stripe === 'undefined') {
-            console.warn('Stripe.js not loaded. Card payments will not be available.');
-            return;
-        }
+// initStripe is now handled by card_payment.js
 
-        // Get Stripe publishable key from backend
-        const response = await fetch(`${BACKEND_API_URL}/api/config`);
-        if (!response.ok) {
-            console.warn('Could not fetch Stripe config. Using fallback mode.');
-            return;
-        }
-
-        const config = await response.json();
-        if (!config.stripePublishableKey) {
-            console.warn('No Stripe key available');
-            return;
-        }
-
-        // Initialize Stripe
-        stripe = Stripe(config.stripePublishableKey);
-        stripeElements = stripe.elements();
-        console.log('✅ Stripe initialized successfully');
-    } catch (error) {
-        console.error('Error initializing Stripe:', error);
-        // Card payments will be disabled but other payment methods work
-    }
-}
 
 function openCheckout() {
     if (cart.length === 0) {
