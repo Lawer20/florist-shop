@@ -118,6 +118,23 @@ def confirm_order():
         # Create database session
         session = Session()
         
+        # Helper to construct order dict locally if DB fails
+        order_dict = {
+            'id': 'PENDING-DB-SAVE', 
+            'customer_name': data['customer_name'],
+            'customer_phone': data['customer_phone'],
+            'customer_email': data.get('customer_email'),
+            'delivery_address': data['delivery_address'],
+            'delivery_date': data['delivery_date'],
+            'delivery_time': data['delivery_time'],
+            'items': data['items'], # Raw items list/json
+            'total_amount': float(data['total_amount']),
+            'payment_method': data['payment_method'],
+            'payment_status': PaymentStatus.SUCCEEDED if data['payment_method'] == 'card' else PaymentStatus.PENDING,
+            'stripe_payment_intent_id': data.get('payment_intent_id')
+        }
+
+        db_save_success = False
         try:
             # Convert items to JSON string if it's not already
             items_json = json.dumps(data['items']) if isinstance(data['items'], list) else data['items']
@@ -140,30 +157,44 @@ def confirm_order():
             
             session.add(order)
             session.commit()
+            db_save_success = True
             
-            # Prepare order data for emails
+            # Update order_dict with real ID
             order_dict = order.to_dict()
-            
-            # Send email notifications (async would be better in production)
-            try:
-                email_service.send_owner_notification(order_dict)
-                if data.get('customer_email'):
-                    email_service.send_customer_confirmation(order_dict)
-            except Exception as email_error:
-                app.logger.error(f"Email notification error: {str(email_error)}")
-                # Don't fail the order if email fails
-            
-            return jsonify({
-                'success': True,
-                'order_id': order.id,
-                'message': 'Order confirmed successfully'
-            }), 201
             
         except Exception as db_error:
             session.rollback()
-            raise db_error
+            app.logger.error(f"❌ DATABASE SAVE FAILED: {str(db_error)}")
+            # Don't raise yet, try to send email first!
+            
+        # Send email notifications (Critical fallback)
+        email_sent = False
+        try:
+            email_service.send_owner_notification(order_dict)
+            if data.get('customer_email'):
+                email_service.send_customer_confirmation(order_dict)
+            email_sent = True
+        except Exception as email_error:
+            app.logger.error(f"Email notification error: {str(email_error)}")
+        
         finally:
             session.close()
+
+        # Decide what to return
+        if db_save_success:
+            return jsonify({
+                'success': True,
+                'order_id': order_dict['id'],
+                'message': 'Order confirmed successfully'
+            }), 201
+        elif email_sent:
+            return jsonify({
+                'success': True,
+                'order_id': 'EMAIL-ONLY',
+                'message': 'Order processed and emailed, but database save failed. Owner notified.'
+            }), 200
+        else:
+            return jsonify({'error': 'Critical: Database save AND Email notification failed.'}), 500
             
     except Exception as e:
         app.logger.error(f"Error confirming order: {str(e)}")
