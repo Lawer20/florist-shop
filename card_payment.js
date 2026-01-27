@@ -38,6 +38,14 @@ async function initStripe() {
             return false;
         }
 
+        // Security Check: Ensure it's a Publishable Key (pk_), not Secret Key (sk_)
+        if (config.stripePublishableKey.startsWith('sk_')) {
+            console.error('SECURITY ERROR: Secret Key used as Publishable Key!');
+            alert('Configuration Error: The site is using a Stripe Secret Key (sk_...) instead of a Publishable Key (pk_...). Please update STRIPE_PUBLISHABLE_KEY in Railway.');
+            hideCardPaymentOption();
+            return false;
+        }
+
         // Initialize Stripe
         stripe = Stripe(config.stripePublishableKey);
         stripeElements = stripe.elements();
