@@ -114,6 +114,8 @@ def create_payment_intent():
         app.logger.error(f"Error creating payment intent: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+import threading
+
 @app.route('/api/confirm-order', methods=['POST'])
 def confirm_order():
     """Confirm and save order after successful payment"""
@@ -129,10 +131,7 @@ def confirm_order():
         if missing_fields:
             return jsonify({'error': f'Missing required fields: {", ".join(missing_fields)}'}), 400
         
-        # Create database session
-        session = Session()
-        
-        # Helper to construct order dict locally if DB fails
+        # Construct order_dict for emails
         order_dict = {
             'id': 'PENDING-DB-SAVE', 
             'customer_name': data['customer_name'],
@@ -141,14 +140,28 @@ def confirm_order():
             'delivery_address': data['delivery_address'],
             'delivery_date': data['delivery_date'],
             'delivery_time': data['delivery_time'],
-            'items': data['items'], # Raw items list/json
+            'items': data['items'],
             'total_amount': float(data['total_amount']),
             'payment_method': data['payment_method'],
             'payment_status': PaymentStatus.SUCCEEDED if data['payment_method'] == 'card' else PaymentStatus.PENDING,
             'stripe_payment_intent_id': data.get('payment_intent_id')
         }
 
+        # Helper function for sending emails
+        def send_emails_task(order_info):
+            try:
+                print(f"📧 Starting async email send for Order #{order_info.get('id')}...")
+                email_service.send_owner_notification(order_info)
+                if order_info.get('customer_email'):
+                    email_service.send_customer_confirmation(order_info)
+                print(f"✅ Async emails sent for Order #{order_info.get('id')}")
+            except Exception as e:
+                print(f"❌ Async email error: {str(e)}")
+
+        # Create database session
+        session = Session()
         db_save_success = False
+        
         try:
             # Convert items to JSON string if it's not already
             items_json = json.dumps(data['items']) if isinstance(data['items'], list) else data['items']
@@ -176,39 +189,43 @@ def confirm_order():
             # Update order_dict with real ID
             order_dict = order.to_dict()
             
+            # SUCCESS CASE: Fire and forget email in background thread
+            # This ensures the UI returns immediately
+            thread = threading.Thread(target=send_emails_task, args=(order_dict,))
+            thread.daemon = True # Build as daemon so it doesn't block shutdown
+            thread.start()
+            
         except Exception as db_error:
             session.rollback()
             app.logger.error(f"❌ DATABASE SAVE FAILED: {str(db_error)}")
-            # Don't raise yet, try to send email first!
             
-        # Send email notifications (Critical fallback)
-        email_sent = False
-        try:
-            email_service.send_owner_notification(order_dict)
-            if data.get('customer_email'):
-                email_service.send_customer_confirmation(order_dict)
-            email_sent = True
-        except Exception as email_error:
-            app.logger.error(f"Email notification error: {str(email_error)}")
+            # FALLBACK CASE: Database failed, try to send email synchronously
+            # We want to wait here to verify at least ONE notification method worked
+            email_sent = False
+            try:
+                send_emails_task(order_dict) # Re-use the helper synchronously
+                email_sent = True
+            except Exception as email_error:
+                app.logger.error(f"Email notification error (fallback): {str(email_error)}")
+            
+            if email_sent:
+                return jsonify({
+                    'success': True,
+                    'order_id': 'EMAIL-ONLY',
+                    'message': 'Order processed via email backup (Database save failed)'
+                }), 200
+            else:
+                return jsonify({'error': 'Critical: Database save AND Email notification failed.'}), 500
         
         finally:
             session.close()
 
-        # Decide what to return
-        if db_save_success:
-            return jsonify({
-                'success': True,
-                'order_id': order_dict['id'],
-                'message': 'Order confirmed successfully'
-            }), 201
-        elif email_sent:
-            return jsonify({
-                'success': True,
-                'order_id': 'EMAIL-ONLY',
-                'message': 'Order processed and emailed, but database save failed. Owner notified.'
-            }), 200
-        else:
-            return jsonify({'error': 'Critical: Database save AND Email notification failed.'}), 500
+        # Normal Return (DB Success)
+        return jsonify({
+            'success': True,
+            'order_id': order_dict['id'],
+            'message': 'Order confirmed successfully'
+        }), 201
             
     except Exception as e:
         app.logger.error(f"Error confirming order: {str(e)}")
