@@ -22,9 +22,18 @@ app.config.from_object(config[env])
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Initialize database
-engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
+# Initialize database
+try:
+    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    print("✅ Database connected successfully")
+except Exception as e:
+    print(f"❌ Database connection failed: {str(e)}")
+    # Fallback: Create engine/session anyway so app doesn't crash on import, 
+    # but queries will fail if connection is still down.
+    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    Session = sessionmaker(bind=engine)
 
 # Initialize services
 stripe_service = StripeService(app.config['STRIPE_SECRET_KEY'])
