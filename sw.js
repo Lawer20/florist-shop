@@ -24,6 +24,16 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    // Skip cross-origin requests (like Stripe)
+    if (!event.request.url.startsWith(self.location.origin)) {
+        return;
+    }
+
+    // Only handle GET requests
+    if (event.request.method !== 'GET') {
+        return;
+    }
+
     // Network-first for HTML pages (ensures fresh content)
     if (event.request.destination === 'document') {
         event.respondWith(

@@ -575,6 +575,12 @@ function showSuccessModal(name, total, paymentMethod, phone) {
             <p><strong>Email: florist.vay.studio@gmail.com</strong></p>
             <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">Note: Use your name (${name}) so we can identify your order.</p>
         `;
+    } else if (paymentMethod === 'card') {
+        payHtml = `
+            <h4>Payment Successful</h4>
+            <p>Your card has been charged <strong>$${total.toFixed(2)}</strong>.</p>
+            <p>We have received your order and will begin preparing it shortly.</p>
+        `;
     } else {
         payHtml = `
             <h4>Cash on Delivery</h4>
