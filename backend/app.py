@@ -18,21 +18,8 @@ app = Flask(__name__)
 env = os.getenv('FLASK_ENV', 'development')
 app.config.from_object(config[env])
 
-# Setup CORS
-CORS(app, resources={
-    r"/api/*": {
-        "origins": [
-            app.config['FRONTEND_URL'], 
-            "https://vay-studio.netlify.app",  # Production frontend
-            "http://127.0.0.1:5500", 
-            "http://localhost:5500",
-            "http://127.0.0.1:8000",
-            "http://localhost:8000"
-        ],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
-    }
-})
+# Setup CORS - Allow all origins for debugging
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Initialize database
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
