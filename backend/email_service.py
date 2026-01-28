@@ -25,7 +25,11 @@ class EmailService:
             html_part = MIMEText(html_content, 'html')
             msg.attach(html_part)
             
-            with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=10) as server:
+            # Force IPv4 resolution to avoid [Errno 101] Network is unreachable on some platforms (IPv6 issues)
+            import socket
+            smtp_ip = socket.gethostbyname(self.smtp_host)
+            
+            with smtplib.SMTP(smtp_ip, self.smtp_port, timeout=10) as server:
                 server.starttls()
                 server.login(self.smtp_user, self.smtp_password)
                 server.send_message(msg)
