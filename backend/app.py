@@ -56,7 +56,8 @@ email_service = EmailService(
     smtp_port=app.config['SMTP_PORT'],
     smtp_user=app.config['SMTP_USER'],
     smtp_password=app.config['SMTP_PASSWORD'],
-    notification_email=app.config['NOTIFICATION_EMAIL']
+    notification_email=app.config['NOTIFICATION_EMAIL'],
+    resend_api_key=app.config['RESEND_API_KEY']
 )
 
 @app.route('/health', methods=['GET'])
