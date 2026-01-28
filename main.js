@@ -373,6 +373,7 @@ function processCheckout(event) {
         // Form validation
         const name = document.getElementById('cust-name').value.trim();
         const phone = document.getElementById('cust-phone').value.trim();
+        const email = document.getElementById('cust-email') ? document.getElementById('cust-email').value.trim() : '';
         const address = document.getElementById('cust-address').value.trim();
 
         // Safety check for stale HTML
@@ -395,6 +396,13 @@ function processCheckout(event) {
         if (!phone) {
             alert('Please enter your phone number.');
             document.getElementById('cust-phone').focus();
+            return;
+        }
+
+        // Email is critical now for notifications
+        if (!email || !email.includes('@')) {
+            alert('Please enter a valid email address.');
+            if (document.getElementById('cust-email')) document.getElementById('cust-email').focus();
             return;
         }
 
@@ -448,6 +456,7 @@ function processCheckout(event) {
             const orderData = {
                 name: name,
                 phone: phone,
+                email: email,
                 email: document.getElementById('cust-email') ? document.getElementById('cust-email').value.trim() : '',
                 address: address,
                 date: date,
