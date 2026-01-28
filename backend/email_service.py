@@ -25,15 +25,27 @@ class EmailService:
             html_part = MIMEText(html_content, 'html')
             msg.attach(html_part)
             
-            # Force IPv4 resolution to avoid [Errno 101] Network is unreachable on some platforms (IPv6 issues)
+            # Force IPv4 resolution to avoid [Errno 101] Network is unreachable
             import socket
             smtp_ip = socket.gethostbyname(self.smtp_host)
             
-            with smtplib.SMTP(smtp_ip, self.smtp_port, timeout=10) as server:
-                server.starttls()
-                server.login(self.smtp_user, self.smtp_password)
-                server.send_message(msg)
-                
+            # Use appropriate logic based on port
+            timeout = 30 # Increased timeout for reliability
+            
+            if int(self.smtp_port) == 465:
+                # Port 465 uses implicit SSL from the start
+                with smtplib.SMTP_SSL(smtp_ip, self.smtp_port, timeout=timeout) as server:
+                    # No starttls() needed for 465
+                    server.login(self.smtp_user, self.smtp_password)
+                    server.send_message(msg)
+            else:
+                # Port 587 uses explicit TLS
+                with smtplib.SMTP(smtp_ip, self.smtp_port, timeout=timeout) as server:
+                    server.starttls()
+                    server.login(self.smtp_user, self.smtp_password)
+                    server.send_message(msg)
+                 
+            print(f"✅ Email sent successfully to {to_email}")   
             return True
         except Exception as e:
             print(f"Email error: {str(e)}")
