@@ -24,6 +24,9 @@ class EmailService:
                 import requests
                 print(f"📧 Sending via Resend API to {to_email}...")
                 
+                # Production Email Sending
+                # Now that vay-flowers.com is verified, we can send to anyone.
+                
                 resp = requests.post(
                     "https://api.resend.com/emails",
                     headers={
@@ -31,7 +34,7 @@ class EmailService:
                         "Content-Type": "application/json"
                     },
                     json={
-                        "from": "V.A.Y Studio <onboarding@resend.dev>", # Default sender for unverified domains
+                        "from": "V.A.Y Studio <orders@vay-flowers.com>", 
                         "to": [to_email],
                         "subject": subject,
                         "html": html_content
@@ -42,34 +45,6 @@ class EmailService:
                 if resp.status_code in [200, 201, 202]:
                     print(f"✅ Resend Success: {resp.json().get('id')}")
                     return True
-                elif resp.status_code == 403 and "validation_error" in resp.text:
-                    # Resend Free Tier Restriction: Retry to verified email
-                    safe_email = 'la4crafting@gmail.com'
-                    print(f"⚠️ Resend 403: Redirecting to verified email ({safe_email})...")
-                    
-                    new_subject = f"[REDIRECTED from {to_email}] {subject}"
-                    
-                    resp_retry = requests.post(
-                        "https://api.resend.com/emails",
-                        headers={
-                            "Authorization": f"Bearer {self.resend_api_key}",
-                            "Content-Type": "application/json"
-                        },
-                        json={
-                            "from": "V.A.Y Studio <onboarding@resend.dev>",
-                            "to": [safe_email],
-                            "subject": new_subject,
-                            "html": f"<p style='color:red; background:#fee; padding:10px;'>Original Recipient: {to_email}</p>" + html_content
-                        },
-                        timeout=10
-                    )
-                    
-                    if resp_retry.status_code in [200, 201, 202]:
-                         print(f"✅ Resend Redirect Success: {resp_retry.json().get('id')}")
-                         return True
-                    else:
-                         print(f"❌ Resend Redirect Failed: {resp_retry.text}")
-                         # Continue to SMTP fallback if this fails
                 else:
                     print(f"⚠️ Resend Failed: {resp.text} - Falling back to SMTP...")
             except Exception as e:
