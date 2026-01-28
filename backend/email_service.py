@@ -7,15 +7,47 @@ import json
 class EmailService:
     """Service for sending email notifications"""
     
-    def __init__(self, smtp_host, smtp_port, smtp_user, smtp_password, notification_email):
+    def __init__(self, smtp_host, smtp_port, smtp_user, smtp_password, notification_email, resend_api_key=None):
         self.smtp_host = smtp_host
         self.smtp_port = smtp_port
         self.smtp_user = smtp_user
         self.smtp_password = smtp_password
         self.notification_email = notification_email
+        self.resend_api_key = resend_api_key
     
     def send_email(self, to_email, subject, html_content):
-        """Send an HTML email"""
+        """Send an HTML email via Resend API (preferred) or SMTP (fallback)"""
+        
+        # 1. Try Resend API first (Http is reliable on Railway)
+        if self.resend_api_key:
+            try:
+                import requests
+                print(f"📧 Sending via Resend API to {to_email}...")
+                
+                resp = requests.post(
+                    "https://api.resend.com/emails",
+                    headers={
+                        "Authorization": f"Bearer {self.resend_api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "from": "V.A.Y Studio <onboarding@resend.dev>", # Default sender for unverified domains
+                        "to": [to_email],
+                        "subject": subject,
+                        "html": html_content
+                    },
+                    timeout=10
+                )
+                
+                if resp.status_code in [200, 201, 202]:
+                    print(f"✅ Resend Success: {resp.json().get('id')}")
+                    return True
+                else:
+                    print(f"⚠️ Resend Failed: {resp.text} - Falling back to SMTP...")
+            except Exception as e:
+                 print(f"⚠️ Resend Error: {str(e)} - Falling back to SMTP...")
+
+        # 2. SMTP Fallback (Legacy)
         try:
             msg = MIMEMultipart('alternative')
             msg['From'] = self.smtp_user
@@ -30,25 +62,23 @@ class EmailService:
             smtp_ip = socket.gethostbyname(self.smtp_host)
             
             # Use appropriate logic based on port
-            timeout = 30 # Increased timeout for reliability
+            timeout = 30 
             
-            if int(self.smtp_port) == 465:
-                # Port 465 uses implicit SSL from the start
-                with smtplib.SMTP_SSL(smtp_ip, self.smtp_port, timeout=timeout) as server:
-                    # No starttls() needed for 465
+            port = int(self.smtp_port)
+            if port == 465:
+                with smtplib.SMTP_SSL(smtp_ip, port, timeout=timeout) as server:
                     server.login(self.smtp_user, self.smtp_password)
                     server.send_message(msg)
             else:
-                # Port 587 uses explicit TLS
-                with smtplib.SMTP(smtp_ip, self.smtp_port, timeout=timeout) as server:
+                with smtplib.SMTP(smtp_ip, port, timeout=timeout) as server:
                     server.starttls()
                     server.login(self.smtp_user, self.smtp_password)
                     server.send_message(msg)
                  
-            print(f"✅ Email sent successfully to {to_email}")   
+            print(f"✅ SMTP Email sent successfully to {to_email}")   
             return True
         except Exception as e:
-            print(f"Email error: {str(e)}")
+            print(f"❌ SMTP Email error: {str(e)}")
             return False
     
     def send_customer_confirmation(self, order_data):

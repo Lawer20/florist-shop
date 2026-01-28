@@ -19,6 +19,7 @@ class Config:
     SMTP_USER = os.getenv('SMTP_USER')
     SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
     NOTIFICATION_EMAIL = os.getenv('NOTIFICATION_EMAIL', 'florist.vay.studio@gmail.com')
+    RESEND_API_KEY = os.getenv('RESEND_API_KEY')
     
     # CORS
     FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://127.0.0.1:5500')
