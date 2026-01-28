@@ -78,19 +78,27 @@ function initCardElement() {
         return;
     }
 
-    // Clear existing content
-    cardContainer.innerHTML = '';
+    // Clear existing content ONLY if cardElement doesn't exist yet (first run)
+    if (!cardElement) {
+        cardContainer.innerHTML = '';
+    }
     if (cardErrors) cardErrors.textContent = '';
 
-    // Only create card element if card payment is selected
+    // Check payment method
     const selectedPayment = document.querySelector('input[name="payment"]:checked');
+    const isCard = selectedPayment && selectedPayment.value === 'card';
 
-    if (selectedPayment && selectedPayment.value === 'card') {
-        // Create and mount card element
-        if (cardElement) {
-            cardElement.unmount();
-        }
+    // Toggle Visibility
+    if (isCard) {
+        cardContainer.classList.remove('hidden');
+    } else {
+        cardContainer.classList.add('hidden');
+        // Do NOT unmount. Just hide.
+        return;
+    }
 
+    // Initialize Stripe Element (Idempotent - only if not already created)
+    if (!cardElement) {
         try {
             cardElement = stripeElements.create('card', {
                 style: {
@@ -112,30 +120,23 @@ function initCardElement() {
             });
 
             cardElement.mount(cardContainer);
-            cardContainer.classList.remove('hidden');
+            console.log('💳 Stripe Card Element mounted');
+
+            // Handle real-time validation errors
+            cardElement.on('change', function (event) {
+                if (cardErrors) {
+                    if (event.error) {
+                        cardErrors.textContent = event.error.message;
+                        cardErrors.style.display = 'block';
+                    } else {
+                        cardErrors.textContent = '';
+                        cardErrors.style.display = 'none';
+                    }
+                }
+            });
+
         } catch (e) {
             console.error('Error mounting card:', e);
-        }
-
-        // Handle real-time validation errors
-        cardElement.on('change', function (event) {
-            if (cardErrors) {
-                if (event.error) {
-                    cardErrors.textContent = event.error.message;
-                    cardErrors.style.display = 'block';
-                } else {
-                    cardErrors.textContent = '';
-                    cardErrors.style.display = 'none';
-                }
-            }
-        });
-
-        cardContainer.classList.remove('hidden');
-    } else {
-        cardContainer.classList.add('hidden');
-        if (cardElement) {
-            cardElement.unmount();
-            cardElement = null;
         }
     }
 }
