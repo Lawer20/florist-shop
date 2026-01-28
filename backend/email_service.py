@@ -153,7 +153,7 @@ class EmailService:
                     <p>If you have any questions, please contact us at {self.smtp_user} or call 734-858-8724.</p>
                 </div>
                 <div class="footer">
-                    <p>V.A.Y Studio | 2410 N 77th AVE, Elmwood Park, IL</p>
+                    <p>V.A.Y Studio | 77th AVE, Elmwood Park, IL</p>
                     <p>© 2025 V.A.Y Studio. All rights reserved.</p>
                 </div>
             </div>
