@@ -151,10 +151,20 @@ def confirm_order():
         def send_emails_task(order_info):
             try:
                 print(f"📧 Starting async email send for Order #{order_info.get('id')}...")
-                email_service.send_owner_notification(order_info)
+                owner_sent = email_service.send_owner_notification(order_info)
+                
+                customer_sent = False
                 if order_info.get('customer_email'):
-                    email_service.send_customer_confirmation(order_info)
-                print(f"✅ Async emails sent for Order #{order_info.get('id')}")
+                    customer_sent = email_service.send_customer_confirmation(order_info)
+                
+                if owner_sent:
+                    print(f"✅ Owner email SENT for Order #{order_info.get('id')}")
+                else:
+                    print(f"❌ Owner email FAILED for Order #{order_info.get('id')}")
+                    
+                if customer_sent:
+                    print(f"✅ Customer email SENT for Order #{order_info.get('id')}")
+                    
             except Exception as e:
                 print(f"❌ Async email error: {str(e)}")
 
