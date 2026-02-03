@@ -149,7 +149,7 @@ img {
 }
 
 .header-logo-img {
-    height: 280px;
+    height: 180px;
     margin-left: -20px;
     transition: all 0.3s ease;
     width: auto;
@@ -268,6 +268,7 @@ img {
 .hero {
     height: 90vh;
     /* Almost full screen */
+    margin-top: 0;
     background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('./hero_flowers_background.png');
     /* Will use generated image */
     background-size: cover;
@@ -764,7 +765,7 @@ footer {
     font-size: 1.8rem;
     margin-bottom: 30px;
     padding-bottom: 15px;
-    border-bottom: 2px solid var(--color-accent-light);
+    border-bottom: 2px solid var(--color-accent);
     color: var(--color-heading);
 }
 

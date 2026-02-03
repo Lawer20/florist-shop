@@ -1,57 +1,84 @@
 const products = [
     {
         id: 1,
-        title: "Royal Jubilee",
-        price: 120.00,
-        image: "bouquet_elegant_roses.png",
+        title: "Velvet Dream",
+        price: 95.00,
+        image: "bouquet_velvet_v2.jpg",
         categories: ["anniversary", "romance"],
         featured: true,
-        description: "A majestic arrangement of 50 premium red roses, symbolizing deep, enduring love."
+        description: "A vibrant arrangement of 30 stems: 10 Spray Roses, 10 Irises, and 10 Limonium."
     },
     {
         id: 2,
-        title: "Spring Radiance",
-        price: 85.00,
-        image: "bouquet_spring_mix.png",
-        categories: ["birthday", "get-well"],
+        title: "Scarlet",
+        price: 90.00,
+        image: "scarlet.png",
+        categories: ["birthday", "romance", "anniversary"],
         featured: true,
-        description: "A vibrant mix of seasonal tulips, peonies, and wildflowers to brighten any day."
+        description: "A stunning arrangement of red roses with purple and coral accents, wrapped elegantly in white paper."
     },
     {
         id: 3,
-        title: "Velvet Dream",
+        title: "Silent Bloom",
         price: 95.00,
-        image: "bouquet_velvet_dream_1767146999117.png",
-        categories: ["romance", "valentines"],
+        image: "silent_bloom.png",
+        categories: ["romance", "sympathy", "anniversary"],
         featured: true,
-        description: "Soft pink and cream roses wrapped in luxurious velvet paper."
+        description: "Elegant white roses paired with fresh eucalyptus, wrapped in crisp white paper with a teal ribbon."
     },
     {
         id: 4,
-        title: "Pure Elegance",
-        price: 75.00,
-        image: "bouquet_pure_elegance_1767147012184.png",
-        categories: ["sympathy", "anniversary"],
+        title: "Pure Passion",
+        price: 95.00,
+        image: "pure_passion.png",
+        categories: ["romance", "anniversary", "featured"],
         featured: false,
-        description: "Classic white roses and lilies, perfect for expressing sincere sentiments."
+        description: "A passionate arrangement of premium red roses and eucalyptus, creating a bold statement of love."
     },
     {
         id: 5,
-        title: "Wildflower Whisper",
-        price: 60.00,
-        image: "bouquet_spring_mix.png", // TODO: Replace with unique wildflower image
-        categories: ["birthday", "just-because"],
+        title: "Yellow Calm",
+        price: 80.00,
+        image: "yellow_calm.png",
+        categories: ["birthday", "friendship", "get-well"],
         featured: false,
-        description: "A rustic, hand-tied bunch of field flowers for a natural look."
+        description: "Vibrant yellow roses arranged with lush greenery and delicate filler flowers, radiating warmth and joy."
     },
     {
         id: 6,
-        title: "Golden Hour",
-        price: 110.00,
-        image: "bouquet_spring_mix.png", // TODO: Replace with unique golden/sunset bouquet image
-        categories: ["mother-day", "thank-you"],
+        title: "Love Balance",
+        price: 100.00,
+        image: "love_balance.png",
+        categories: ["romance", "anniversary", "mother-day"],
         featured: true, // Let's feature 4 items
-        description: "Warm yellow and orange blooms capturing the glow of sunset."
+        description: "A harmonious blend of red and white roses with delicate baby's breath, symbolizing unity and love."
+    },
+    {
+        id: 7,
+        title: "Wild Harmony",
+        price: 75.00,
+        image: "wild_harmony.png",
+        categories: ["sympathy", "condolence"],
+        featured: true,
+        description: "A graceful arrangement of red and cream roses accented with fresh greenery, offering a gesture of peace and harmony."
+    },
+    {
+        id: 8,
+        title: "Rose Embrace",
+        price: 110.00,
+        image: "rose_embrace.png",
+        categories: ["sympathy", "condolence"],
+        featured: true,
+        description: "A large, comforting bouquet of deep red roses and lush green foliage, expressing profound love and support."
+    },
+    {
+        id: 9,
+        title: "Sunny Smile",
+        price: 90.00,
+        image: "sunny_smile.png",
+        categories: ["mother-day", "birthday", "get-well"],
+        featured: false,
+        description: "A cheerful mix of bright sunflowers and crisp white blooms, wrapped in natural kraft paper to bring instant joy."
     }
 ];
 

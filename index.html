@@ -91,7 +91,7 @@
                             <p>Sourced daily for maximum longevity.</p>
                         </div>
                         <div class="feature-item">
-                            <h3>Uniques Designs</h3>
+                            <h3>Unique Designs</h3>
                             <p>Tailored to your specific style and occasion.</p>
                         </div>
                         <div class="feature-item">
@@ -113,17 +113,6 @@
 
                 <div id="product-grid" class="product-grid">
                     <!-- Products will be injected here via JS -->
-                    <!-- Fallback content if JS fails -->
-                    <div class="product-card">
-                        <div class="img-wrapper">
-                            <!-- Placeholder -->
-                            <div class="placeholder-img">Loading...</div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Spring Radiance</h3>
-                            <p class="price">$55.00</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -228,8 +217,8 @@
                     </div>
                 </div>
 
-                <h4 style="margin: 20px 0 10px; font-family: var(--font-heading);">Add Extras</h4>
-                <div id="addons-list" class="addons-list">
+                <h4 style="margin: 20px 0 10px; font-family: var(--font-heading); display: none;">Add Extras</h4>
+                <div id="addons-list" class="addons-list" style="display: none;">
                     <!-- Add-ons injected via JS -->
                 </div>
                 <div class="total-section">
@@ -287,6 +276,10 @@
                     <div class="form-group">
                         <label>Phone</label>
                         <input type="tel" id="cust-phone" required placeholder="Your Phone">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="cust-email" required placeholder="Your Email">
                     </div>
                     <div class="form-group">
                         <label>Delivery Address</label>

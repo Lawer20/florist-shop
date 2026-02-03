@@ -457,7 +457,6 @@ function processCheckout(event) {
                 name: name,
                 phone: phone,
                 email: email,
-                email: document.getElementById('cust-email') ? document.getElementById('cust-email').value.trim() : '',
                 address: address,
                 date: date,
                 time: time
