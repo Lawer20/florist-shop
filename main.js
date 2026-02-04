@@ -81,18 +81,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 function renderProductGrid(container, items) {
     if (!container) return;
 
-    container.innerHTML = items.map(product => `
+    container.innerHTML = items.map(product => {
+        let displayPrice;
+
+        // Calculate default "Medium" price for display
+        if (product.sizes) {
+            // Find medium or fallback to invalid index
+            const medium = product.sizes.find(s => s.id === 'medium') || product.sizes[1] || product.sizes[0];
+            displayPrice = medium ? medium.price : product.price;
+        } else {
+            // Standard multiplier for medium is 1.7
+            displayPrice = product.price * 1.7;
+        }
+
+        return `
         <div class="product-card" onclick="openModal(${product.id})" style="cursor: pointer;">
             <div class="img-wrapper">
                 <img src="${product.image}" alt="${product.title}" loading="lazy">
             </div>
             <div class="product-info">
                 <h3>${product.title}</h3>
-                <p class="price">$${product.price.toFixed(2)}</p>
+                <p class="price">$${displayPrice.toFixed(2)}</p>
                 <button class="btn btn-secondary" style="color: #333; border-color: #333;" onclick="event.stopPropagation(); openModal(${product.id})">Customize</button>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function initMobileMenu() {
@@ -142,20 +156,31 @@ function initDatePickers() {
 
 /* --- Size Logic --- */
 const SIZES = [
-    { id: 'standard', name: 'Standard (12 Stems)', multiplier: 1.0 },
-    { id: 'deluxe', name: 'Deluxe (24 Stems)', multiplier: 1.7 },
-    { id: 'premium', name: 'Premium (36 Stems)', multiplier: 2.4 }
+    { id: 'small', name: 'Small (12 Stems)', multiplier: 1.0 },
+    { id: 'medium', name: 'Medium (24 Stems)', multiplier: 1.7 },
+    { id: 'large', name: 'Large (36 Stems)', multiplier: 2.4 }
 ];
 
-let currentSize = SIZES[0];
+let currentSizesOptions = [];
+let currentSize = null;
 
 function openModal(productId) {
     currentProduct = products.find(p => p.id === productId);
     if (!currentProduct) return;
 
     // Reset State
-    currentSize = SIZES[0]; // Reset to Standard
-    currentTotal = currentProduct.price;
+    currentSizesOptions = currentProduct.sizes || SIZES;
+
+    // Default to Medium (Index 1) if available, otherwise 0
+    const defaultIndex = 1;
+    currentSize = currentSizesOptions[defaultIndex] || currentSizesOptions[0];
+
+    // Calculate initial total
+    if (currentSize.price) {
+        currentTotal = currentSize.price;
+    } else {
+        currentTotal = currentProduct.price * (currentSize.multiplier || 1.7);
+    }
 
     // UI Updates
     document.getElementById('modal-product-title').textContent = `Customize: ${currentProduct.title}`;
@@ -171,8 +196,14 @@ function renderSizes() {
     const list = document.getElementById('size-options');
     if (!list) return;
 
-    list.innerHTML = SIZES.map(size => {
-        const price = (currentProduct.price * size.multiplier).toFixed(0);
+    list.innerHTML = currentSizesOptions.map(size => {
+        let price;
+        if (size.price) {
+            price = size.price.toFixed(0);
+        } else {
+            price = (currentProduct.price * size.multiplier).toFixed(0);
+        }
+
         const isSelected = size.id === currentSize.id ? 'active' : '';
 
         return `
@@ -185,7 +216,7 @@ function renderSizes() {
 }
 
 function selectSize(sizeId) {
-    currentSize = SIZES.find(s => s.id === sizeId);
+    currentSize = currentSizesOptions.find(s => s.id === sizeId);
 
     // Update visual selection
     document.querySelectorAll('.size-option').forEach(el => el.classList.remove('active'));
@@ -224,7 +255,13 @@ function updateTotal() {
         if (addon) addonsNative += addon.price;
     });
 
-    const basePrice = currentProduct.price * currentSize.multiplier;
+    let basePrice;
+    if (currentSize.price) {
+        basePrice = currentSize.price;
+    } else {
+        basePrice = currentProduct.price * currentSize.multiplier;
+    }
+
     currentTotal = basePrice + addonsNative;
     updateTotalDisplay();
 }

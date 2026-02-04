@@ -877,7 +877,28 @@ footer {
     }
 
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        /* Slightly smaller for better fit */
+        padding: 0 15px;
+        /* Prevent edge touching */
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+        /* Even smaller for very narrow screens */
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 0;
+        /* Let header/footer handle padding */
+    }
+
+    .modal-body {
+        padding: 15px;
+        /* Reduced padding */
     }
 }
 
@@ -1343,6 +1364,8 @@ footer {
     .modal-footer .btn {
         width: 100%;
         margin-left: 0;
+        margin-top: 10px;
+        /* Spacing between stacked buttons */
     }
 
     /* Reverse order visually if desired, but column is fine for now */
