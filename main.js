@@ -521,7 +521,7 @@ function processCheckout(event) {
                 alert('Payment error: ' + err.message);
             });
         } else {
-            // Handle traditional payment methods (Zelle/PayPal/Cash) via Google Sheets
+            // Handle traditional payment methods (Zelle/Cash) via Google Sheets
             const orderData = {
                 name: name,
                 phone: phone,
@@ -586,13 +586,6 @@ function showSuccessModal(name, total, paymentMethod, phone) {
             <p>Please send <strong>$${total.toFixed(2)}</strong> to:</p>
             <p><strong>Phone: 734-858-8724</strong></p>
             <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">Note: Use your phone number (${phone}) so we can identify your order.</p>
-        `;
-    } else if (paymentMethod === 'paypal') {
-        payHtml = `
-            <h4>PayPal Payment</h4>
-            <p>Please send <strong>$${total.toFixed(2)}</strong> to:</p>
-            <p><strong>Email: florist.vay.studio@gmail.com</strong></p>
-            <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">Note: Use your name (${name}) so we can identify your order.</p>
         `;
     } else if (paymentMethod === 'card') {
         payHtml = `

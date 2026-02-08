@@ -292,6 +292,8 @@ img {
     font-size: 0.9rem;
     margin-bottom: 20px;
     display: block;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    font-weight: 600;
 }
 
 .hero h1 {
@@ -299,11 +301,16 @@ img {
     line-height: 1.1;
     margin-bottom: 30px;
     color: white;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
 }
 
 .hero h1 em {
     font-style: italic;
     font-weight: 400;
+}
+
+.hero-content p {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .hero-buttons {

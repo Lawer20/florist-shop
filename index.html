@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V.A.Y Studio | Exquisite Bouquets in Elmwood Park, IL</title>
+    <title>Modern Bouquets in Chicago | V.A.Y Studio</title>
     <meta name="description"
-        content="Premium floral arrangements and custom bouquets at V.A.Y Studio, Elmwood Park, IL. Order fresh flowers for delivery or pickup.">
+        content="V.A.Y Studio creates modern bouquets in Chicago using premium fresh flowers. Clean, elegant designs and custom florals for every occasion.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +24,31 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#D8A7B1">
     <link rel="apple-touch-icon" href="images/icon-192.png">
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Florist",
+      "name": "V.A.Y Studio",
+      "image": "https://vay-flowers.com/images/logo_transparent.png",
+      "description": "Premium florist in Elmwood Park serving Chicago area with fresh flowers and custom bouquets",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "77th AVE",
+        "addressLocality": "Elmwood Park",
+        "addressRegion": "IL",
+        "addressCountry": "US"
+      },
+      "telephone": "+17348588724",
+      "email": "florist.vay.studio@gmail.com",
+      "priceRange": "$$",
+      "url": "https://vay-flowers.com",
+      "areaServed": {
+        "@type": "City",
+        "name": "Chicago"
+      }
+    }
+    </script>
 </head>
 
 <body>
@@ -60,11 +85,13 @@
         <!-- Hero Section -->
         <section id="home" class="hero">
             <div class="hero-content">
-                <span class="subtitle">Handcrafted in Illinois</span>
-                <h1>Making Moments <br><em>Unforgettable</em></h1>
-                <p>Premium floral arrangements for weddings, events, and everyday joy.</p>
+                <span class="subtitle">PREMIUM BLOOMS • MODERN DESIGN • CHICAGO</span>
+                <h1>Modern Bouquets <br><em>in Chicago</em></h1>
+                <p>Clean, elegant compositions crafted with premium seasonal flowers — designed to feel special,
+                    refined, and gift-ready.</p>
                 <div class="hero-buttons">
-                    <a href="shop.html" class="btn btn-primary">View Collection</a>
+                    <a href="shop.html" class="btn btn-primary">Shop Bouquets</a>
+                    <a href="contact.html" class="btn btn-secondary">Custom Order</a>
                 </div>
             </div>
         </section>
@@ -73,30 +100,33 @@
         <section id="about" class="about-section">
             <div class="container">
                 <div class="section-header text-center">
-                    <h2>Our Passion for Petals</h2>
-                    <p class="section-desc">Creating art with nature's finest colors.</p>
+                    <h2>What We're Known For</h2>
+                    <p class="section-desc">Signature modern designs that look beautiful in real life, not just in
+                        photos.</p>
                 </div>
                 <div class="about-grid">
                     <div class="about-text">
-                        <p>Welcome to our floral studio based in the heart of Illinois. We believe that every bouquet
-                            tells a story. Whether it's a grand celebration or a small gesture of love, we craft each
-                            arrangement with precision, care, and a touch of magic.</p>
-                        <p>Using only the freshest seasonal blooms, we ensure that your flowers arrive vibrant and
-                            fragrant, ready to brighten any space.</p>
+                        <p>Welcome to V.A.Y Studio, a modern floral studio creating fresh flower bouquets in Chicago.
+                            Our style is clean, elegant, and intentional — with carefully selected blooms, balanced
+                            color palettes, and details that feel truly personal.</p>
+                        <p>We work with premium seasonal flowers to craft bouquets that look beautiful in real life.
+                            Whether you're celebrating a birthday, anniversary, milestone, or simply want to brighten
+                            someone's day, each arrangement is designed to feel special — refined, modern, and
+                            gift-ready.</p>
                     </div>
                     <!-- Values / Features -->
                     <div class="features-grid">
                         <div class="feature-item">
-                            <h3>Fresh Blooms</h3>
-                            <p>Sourced daily for maximum longevity.</p>
+                            <h3>Fresh, Premium Blooms</h3>
+                            <p>Selected for longevity, texture, and vibrant color.</p>
                         </div>
                         <div class="feature-item">
-                            <h3>Unique Designs</h3>
-                            <p>Tailored to your specific style and occasion.</p>
+                            <h3>Signature Modern Design</h3>
+                            <p>Clean compositions with an editorial, minimalist aesthetic.</p>
                         </div>
                         <div class="feature-item">
-                            <h3>Local Love</h3>
-                            <p>Serving the Illinois community with pride.</p>
+                            <h3>Custom-Made for Your Moment</h3>
+                            <p>Bouquets tailored to your occasion, mood, and preferences in the Chicago area.</p>
                         </div>
                     </div>
                 </div>
@@ -140,7 +170,8 @@
                     </ul>
 
                     <div class="social-links">
-                        <a href="#">Instagram</a>
+                        <a href="https://www.instagram.com/vay_flower_studio?igsh=MTkzMmdodXYzdnpjbA==" target="_blank"
+                            rel="noopener noreferrer">Instagram</a>
                         <a href="#">Facebook</a>
                     </div>
                 </div>
@@ -162,7 +193,8 @@
                     </div>
                     <p>Creating unforgettable moments with nature's finest blooms. Hand-crafted in Elmwood Park, IL.</p>
                     <div class="social-links-footer">
-                        <a href="#">Instagram</a>
+                        <a href="https://www.instagram.com/vay_flower_studio?igsh=MTkzMmdodXYzdnpjbA==" target="_blank"
+                            rel="noopener noreferrer">Instagram</a>
                         <a href="#">Facebook</a>
                     </div>
                 </div>
@@ -324,10 +356,7 @@
                             <input type="radio" name="payment" value="zelle" onchange="handlePaymentMethodChange()">
                             <span class="pay-label">Zelle</span>
                         </label>
-                        <label class="payment-option">
-                            <input type="radio" name="payment" value="paypal" onchange="handlePaymentMethodChange()">
-                            <span class="pay-label">PayPal</span>
-                        </label>
+
                         <label class="payment-option">
                             <input type="radio" name="payment" value="cash" onchange="handlePaymentMethodChange()">
                             <span class="pay-label">Cash on Delivery</span>
