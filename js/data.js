@@ -110,9 +110,9 @@ const products = [
         featured: true,
         description: "A large, comforting bouquet of deep red roses and lush green foliage, expressing profound love and support.",
         sizes: [
-            { id: 'small', name: 'Small (12 items)', price: 50.00 },
-            { id: 'medium', name: 'Medium (24 items)', price: 95.00 },
-            { id: 'large', name: 'Large (36 items)', price: 150.00 }
+            { id: 'small', name: 'Small (12 items)', price: 70.00 },
+            { id: 'medium', name: 'Medium (24 items)', price: 130.00 },
+            { id: 'large', name: 'Large (36 items)', price: 170.00 }
         ]
     },
     {
