@@ -13,7 +13,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=14">
+    <link rel="stylesheet" href="style.css?v=106">
     <!-- Flatpickr for styled date picker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -96,6 +96,96 @@
             </div>
         </section>
 
+        <!-- ===== SEASONAL SECTION ===== -->
+        <section id="seasonal-section" class="seasonal-section" style="display:none;">
+            <div class="seasonal-petals" aria-hidden="true">
+                <span>🌸</span><span>🌷</span><span>🌸</span><span>🌿</span><span>🌸</span>
+                <span>🌼</span><span>🍃</span><span>🌸</span><span>🌱</span>
+            </div>
+            <div class="container">
+                <div class="seasonal-header">
+                    <div class="seasonal-badge-wrap">
+                        <span class="seasonal-badge">Limited Season — Spring 2026</span>
+                    </div>
+                    <h2 class="seasonal-title" id="seasonal-title">Spring Collection</h2>
+                    <p class="seasonal-subtitle" id="seasonal-subtitle">Handcrafted arrangements for Women's Day &amp;
+                        Easter</p>
+                </div>
+
+                <div class="seasonal-occasions">
+                    <span class="occasion-chip">🌹 Women's Day</span>
+                    <span class="occasion-chip">🐣 Easter</span>
+                </div>
+
+                <div class="seasonal-cards" id="seasonal-cards">
+                    <!-- Cards injected by JS -->
+                </div>
+
+                <div class="seasonal-cta">
+                    <a href="shop.html?category=seasonal" class="btn btn-seasonal">View All Spring Picks →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== WEDDING SECTION ===== -->
+        <section id="wedding-section" class="wedding-section">
+            <!-- Decorative rings -->
+            <div class="wedding-deco" aria-hidden="true">
+                <span class="wedding-ring">◯</span>
+                <span class="wedding-ring">◯</span>
+            </div>
+            <div class="container">
+                <div class="wedding-header">
+                    <span class="wedding-badge">Weddings & Events</span>
+                    <h2 class="wedding-title">Your Day, Our Flowers</h2>
+                    <p class="wedding-subtitle">Every love story is unique — and so should be its flowers.</p>
+                </div>
+
+                <!-- Promo block -->
+                <div class="wedding-promo">
+                    <div class="wedding-promo-text">
+                        <h3>Custom Wedding Florals & Full Event Decoration</h3>
+                        <p>We believe that a wedding is more than a ceremony — it's a living work of art. That's why
+                            every wedding floral order at V.A.Y Studio is handled as a fully personalised experience.
+                            From the bridal bouquet and boutonnières to table centrepieces, ceremony arches, and venue
+                            décor, we collaborate with you to bring your vision to life — bloom by bloom.</p>
+                        <ul class="wedding-services-list">
+                            <li>💐 Bridal &amp; bridesmaids' bouquets</li>
+                            <li>🌿 Boutonnières &amp; wrist corsages</li>
+                            <li>🕊️ Ceremony &amp; reception décor</li>
+                            <li>🌸 Table arrangements &amp; centrepieces</li>
+                            <li>✨ Full venue floral design</li>
+                        </ul>
+                        <div class="wedding-promo-actions">
+                            <a href="contact.html" class="btn btn-wedding-outline">Book a Consultation →</a>
+                            <a href="shop.html?category=wedding" class="btn btn-wedding">View Wedding Shop →</a>
+                        </div>
+                    </div>
+                    <div class="wedding-promo-accent">
+                        <div class="wedding-accent-ring"></div>
+                        <img src="table_dicoration.png" alt="Wedding Table Decoration" class="wedding-promo-img"
+                            loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Product slider -->
+                <div class="wedding-cards-label">Ready-to-Order Pieces</div>
+                <div class="wedding-slider-wrap">
+                    <button class="wedding-slider-btn wedding-slider-prev" onclick="weddingSlide(-1)"
+                        aria-label="Previous">&#8592;</button>
+                    <div class="wedding-slider-track" id="wedding-cards">
+                        <!-- Injected by JS -->
+                    </div>
+                    <button class="wedding-slider-btn wedding-slider-next" onclick="weddingSlide(1)"
+                        aria-label="Next">&#8594;</button>
+                </div>
+
+                <div class="wedding-cta">
+                    <a href="shop.html?category=wedding" class="btn btn-wedding">View All Wedding Items →</a>
+                </div>
+            </div>
+        </section>
+
         <!-- About Section -->
         <section id="about" class="about-section">
             <div class="container">
@@ -144,6 +234,19 @@
                 <div id="product-grid" class="product-grid">
                     <!-- Products will be injected here via JS -->
                 </div>
+            </div>
+        </section>
+
+        <!-- Wedding Teaser Banner -->
+        <section class="wedding-teaser">
+            <div class="container wedding-teaser-inner">
+                <div class="wedding-teaser-text">
+                    <span class="wedding-teaser-eyebrow">✦ Weddings &amp; Events</span>
+                    <h3>We Create Wedding Flowers &amp; Full Event Décor</h3>
+                    <p>Boutonnières, corsages, bridal bouquets, and complete venue decoration — all made-to-order, just
+                        for you.</p>
+                </div>
+                <a href="#wedding-section" class="btn btn-wedding">Explore Wedding Florals</a>
             </div>
         </section>
 
@@ -406,9 +509,9 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=103"></script>
-    <script src="card_payment.js?v=103"></script>
-    <script src="main.js?v=103"></script>
+    <script src="js/data.js?v=104"></script>
+    <script src="card_payment.js?v=104"></script>
+    <script src="main.js?v=104"></script>
 </body>
 
 </html>

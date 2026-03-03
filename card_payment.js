@@ -144,6 +144,33 @@ function initCardElement() {
 // Handle payment method change
 function handlePaymentMethodChange() {
     initCardElement();
+
+    const selectedPayment = document.querySelector('input[name="payment"]:checked');
+    const paymentMethod = selectedPayment ? selectedPayment.value : '';
+
+    // Show/hide Zelle info box
+    let zelleInfo = document.getElementById('zelle-info-box');
+    if (!zelleInfo) {
+        zelleInfo = document.createElement('div');
+        zelleInfo.id = 'zelle-info-box';
+        zelleInfo.style.cssText = 'background:#f0f7ff; border:1px solid #b3d4f5; border-radius:8px; padding:12px 16px; margin-top:12px; font-size:0.9rem; line-height:1.6;';
+        // Insert after the payment-options div
+        const paymentOptions = document.querySelector('.payment-options');
+        if (paymentOptions && paymentOptions.parentNode) {
+            paymentOptions.parentNode.insertBefore(zelleInfo, paymentOptions.nextSibling);
+        }
+    }
+
+    if (paymentMethod === 'zelle') {
+        zelleInfo.innerHTML = `
+            <strong>💙 Zelle details:</strong><br>
+            📧 <strong>florist.vay.studio@gmail.com</strong><br>
+            <span style="color:#666; font-size:0.82rem;">Send payment after placing your order.</span>
+        `;
+        zelleInfo.style.display = 'block';
+    } else {
+        zelleInfo.style.display = 'none';
+    }
 }
 
 /* --- Card Payment Processing --- */

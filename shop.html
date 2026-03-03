@@ -13,7 +13,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=14">
+    <link rel="stylesheet" href="style.css?v=106">
     <!-- Flatpickr for styled date picker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -83,6 +83,52 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Mobile: chip-style filter buttons */
+        @media (max-width: 600px) {
+            .filter-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .filter-list li {
+                margin-bottom: 0;
+                flex: 1 1 calc(50% - 4px);
+                /* Exactly 2 per row */
+                max-width: calc(50% - 4px);
+            }
+
+            .filter-btn {
+                width: 100%;
+                text-align: center;
+                padding: 8px 12px !important;
+                border-radius: 20px !important;
+                border: 1px solid #eee !important;
+                background: #f5f5f5 !important;
+                font-size: 0.88rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #555;
+                font-weight: 400;
+            }
+
+            .filter-btn.active {
+                background: var(--color-primary) !important;
+                color: #fff !important;
+                border-color: var(--color-primary) !important;
+                font-weight: 600;
+            }
+
+            .filter-btn:hover {
+                background: #eee !important;
+            }
+
+            .filter-btn.active:hover {
+                background: var(--color-primary-dark) !important;
+            }
+        }
     </style>
 </head>
 
@@ -132,11 +178,12 @@
                 <h3>Occasions</h3>
                 <ul class="filter-list">
                     <li><button class="filter-btn active" onclick="filterShop('all')">All Bouquets</button></li>
+                    <li><button class="filter-btn" onclick="filterShop('seasonal')">Seasonal</button></li>
+                    <li><button class="filter-btn" onclick="filterShop('wedding')">Weddings</button></li>
                     <li><button class="filter-btn" onclick="filterShop('birthday')">Birthday</button></li>
                     <li><button class="filter-btn" onclick="filterShop('anniversary')">Anniversary</button></li>
                     <li><button class="filter-btn" onclick="filterShop('romance')">Romance</button></li>
                     <li><button class="filter-btn" onclick="filterShop('sympathy')">Sympathy</button></li>
-                    <li><button class="filter-btn" onclick="filterShop('mother-day')">Mother's Day</button></li>
                 </ul>
             </aside>
 
@@ -372,9 +419,9 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=103"></script>
-    <script src="card_payment.js?v=103"></script>
-    <script src="main.js?v=103"></script>
+    <script src="js/data.js?v=104"></script>
+    <script src="card_payment.js?v=104"></script>
+    <script src="main.js?v=104"></script>
     <script>
         // Force unregister stale service workers if they block updates
         if ('serviceWorker' in navigator) {
@@ -408,14 +455,22 @@
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             // Find button that matches
             const buttons = Array.from(document.querySelectorAll('.filter-btn'));
-            const activeBtn = buttons.find(b => b.textContent.toLowerCase().includes(category === 'mother-day' ? "mother" : category) || (category === 'all' && b.textContent.includes('All')));
+            const activeBtn = buttons.find(b => b.textContent.toLowerCase().includes(category === 'mother-day' ? "mother" : category === 'seasonal' ? 'seasonal' : category) || (category === 'all' && b.textContent.includes('All')));
             if (activeBtn) activeBtn.classList.add('active');
 
             if (category === 'all') {
-                renderProductGrid(container, products);
+                renderProductGrid(container, products.filter(p => !p.seasonal && !p.wedding));
                 title.textContent = "All Bouquets";
+            } else if (category === 'seasonal') {
+                const filtered = (typeof seasonalCollection !== 'undefined' && seasonalCollection.items) ? seasonalCollection.items : products.filter(p => p.seasonal);
+                renderProductGrid(container, filtered);
+                title.textContent = "Spring Collection";
+            } else if (category === 'wedding') {
+                const filtered = (typeof weddingCollection !== 'undefined' && weddingCollection.items) ? weddingCollection.items : products.filter(p => p.wedding);
+                renderProductGrid(container, filtered);
+                title.textContent = "Wedding Collection";
             } else {
-                const filtered = products.filter(p => p.categories.includes(category));
+                const filtered = products.filter(p => p.categories.includes(category) && !p.seasonal && !p.wedding);
                 renderProductGrid(container, filtered);
                 title.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ') + " Collection";
             }

@@ -54,6 +54,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     initMobileMenu();
     updateCartCount();
     initDatePickers(); // Initialize date restrictions
+    initSeasonalSection(); // Initialize seasonal section
+    initWeddingSection(); // Initialize wedding section
 
     // Initialize Stripe for card payments (from card_payment.js module)
     if (typeof initStripe !== 'undefined') {
@@ -573,6 +575,136 @@ function processCheckout(event) {
 }
 
 
+/* --- Seasonal Section --- */
+function initSeasonalSection() {
+    const section = document.getElementById('seasonal-section');
+    if (!section) return;
+
+    // Hide if not active or no items
+    if (!seasonalCollection || !seasonalCollection.active || !seasonalCollection.items || seasonalCollection.items.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    // Update title/subtitle from config
+    const titleEl = document.getElementById('seasonal-title');
+    const subtitleEl = document.getElementById('seasonal-subtitle');
+    if (titleEl) titleEl.textContent = seasonalCollection.title;
+    if (subtitleEl) subtitleEl.textContent = seasonalCollection.subtitle;
+
+    // Render cards
+    const cardsContainer = document.getElementById('seasonal-cards');
+    if (!cardsContainer) return;
+
+    cardsContainer.innerHTML = seasonalCollection.items.map(product => {
+        const startingPrice = product.sizes ? product.sizes[0].price : product.price;
+        const imgStyle = product.id === 107
+            ? 'style="object-fit: contain; background: #fdf8f2; padding: 4px;"'
+            : '';
+        return `
+        <div class="seasonal-card" onclick="openModal(${product.id})">
+            <div class="seasonal-card-ribbon">${product.seasonTag || 'Seasonal'}</div>
+            <div class="seasonal-card-img">
+                <img src="${product.image}" alt="${product.title}" loading="lazy" ${imgStyle}>
+            </div>
+            <div class="seasonal-card-body">
+                <h3>${product.title}</h3>
+                <p class="seasonal-card-price">From $${startingPrice.toFixed(2)}</p>
+                <button class="btn-seasonal-card" onclick="event.stopPropagation(); openModal(${product.id})">Customize</button>
+            </div>
+        </div>
+        `;
+    }).join('');
+
+    // Show section
+    section.style.display = 'block';
+}
+
+/* --- Wedding Section --- */
+let _weddingIsScrolling = false;
+
+function initWeddingSection() {
+    const section = document.getElementById('wedding-section');
+    if (!section) return;
+    if (!weddingCollection || !weddingCollection.active || !weddingCollection.items || weddingCollection.items.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    const cardsContainer = document.getElementById('wedding-cards');
+    if (!cardsContainer) return;
+
+    const buildCard = (product) => {
+        const price = product.sizes ? product.sizes[0].price : product.price;
+        return `
+        <div class="wedding-card" onclick="openModal(${product.id})">
+            <div class="wedding-card-img">
+                <img src="${product.image}" alt="${product.title}" loading="lazy">
+            </div>
+            <div class="wedding-card-body">
+                <h3>${product.title}</h3>
+                <p class="wedding-card-price">From $${price.toFixed(2)}</p>
+                <button class="btn-wedding-card" onclick="event.stopPropagation(); openModal(${product.id})">Add to Cart</button>
+            </div>
+        </div>
+        `;
+    };
+
+    const items = weddingCollection.items;
+    // Render: clones-at-end + real cards + clones-at-start for infinite loop
+    const realHTML = items.map(buildCard).join('');
+    const clonesEnd = items.slice(0, 3).map(buildCard).join('');   // shown after last real card
+    const clonesStart = items.slice(-3).map(buildCard).join('');   // shown before first real card
+    cardsContainer.innerHTML = clonesStart + realHTML + clonesEnd;
+
+    // Mark clone groups so we can skip over them
+    const allCards = cardsContainer.querySelectorAll('.wedding-card');
+    const totalReal = items.length;
+    const clonesBefore = Math.min(3, totalReal);
+    const clonesAfter = Math.min(3, totalReal);
+
+    // Jump past leading clones on init (without animation)
+    requestAnimationFrame(() => {
+        const card = cardsContainer.querySelector('.wedding-card');
+        const cardW = card ? card.offsetWidth + 20 : 220;
+        cardsContainer.scrollLeft = clonesBefore * cardW;
+    });
+
+    // Infinite scroll: silently jump when user scrolls into clone zones
+    cardsContainer.addEventListener('scroll', () => {
+        if (_weddingIsScrolling) return;
+        const card = cardsContainer.querySelector('.wedding-card');
+        const cardW = card ? card.offsetWidth + 20 : 220;
+        const realStart = clonesBefore * cardW;
+        const realEnd = (clonesBefore + totalReal) * cardW;
+        const trackWidth = cardsContainer.scrollWidth;
+
+        if (cardsContainer.scrollLeft < cardW * 0.5) {
+            // Scrolled too far left into leading clones → jump to real end
+            _weddingIsScrolling = true;
+            cardsContainer.style.scrollBehavior = 'auto';
+            cardsContainer.scrollLeft = realEnd - cardW;
+            cardsContainer.style.scrollBehavior = '';
+            requestAnimationFrame(() => { _weddingIsScrolling = false; });
+        } else if (cardsContainer.scrollLeft >= trackWidth - cardsContainer.offsetWidth - cardW * 0.5) {
+            // Scrolled too far right into trailing clones → jump to real start
+            _weddingIsScrolling = true;
+            cardsContainer.style.scrollBehavior = 'auto';
+            cardsContainer.scrollLeft = realStart;
+            cardsContainer.style.scrollBehavior = '';
+            requestAnimationFrame(() => { _weddingIsScrolling = false; });
+        }
+    });
+}
+
+function weddingSlide(direction) {
+    const track = document.getElementById('wedding-cards');
+    if (!track) return;
+    const card = track.querySelector('.wedding-card');
+    const scrollAmount = card ? card.offsetWidth + 20 : 220;
+    track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+
 function showSuccessModal(name, total, paymentMethod, phone) {
     const intro = document.getElementById('success-intro');
     const instructions = document.getElementById('payment-instructions');
@@ -584,7 +716,7 @@ function showSuccessModal(name, total, paymentMethod, phone) {
         payHtml = `
             <h4>Zelle Payment</h4>
             <p>Please send <strong>$${total.toFixed(2)}</strong> to:</p>
-            <p><strong>Phone: 734-858-8724</strong></p>
+            <p><strong>📧 florist.vay.studio@gmail.com</strong></p>
             <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">Note: Use your phone number (${phone}) so we can identify your order.</p>
         `;
     } else if (paymentMethod === 'card') {
