@@ -86,14 +86,12 @@ function renderProductGrid(container, items) {
     container.innerHTML = items.map(product => {
         let displayPrice;
 
-        // Calculate default "Medium" price for display
-        if (product.sizes) {
-            // Find medium or fallback to invalid index
-            const medium = product.sizes.find(s => s.id === 'medium') || product.sizes[1] || product.sizes[0];
-            displayPrice = medium ? medium.price : product.price;
+        // Calculate lowest price for display
+        if (product.sizes && product.sizes.length > 0) {
+            displayPrice = Math.min(...product.sizes.map(s => s.price));
         } else {
-            // Standard multiplier for medium is 1.7
-            displayPrice = product.price * 1.7;
+            // Fallback to base price
+            displayPrice = product.price;
         }
 
         return `
@@ -103,7 +101,7 @@ function renderProductGrid(container, items) {
             </div>
             <div class="product-info">
                 <h3>${product.title}</h3>
-                <p class="price">$${displayPrice.toFixed(2)}</p>
+                <p class="price">From $${displayPrice.toFixed(2)}</p>
                 <button class="btn btn-secondary" style="color: #333; border-color: #333;" onclick="event.stopPropagation(); openModal(${product.id})">Customize</button>
             </div>
         </div>
@@ -639,7 +637,7 @@ function initWeddingSection() {
         return `
         <div class="wedding-card" onclick="openModal(${product.id})">
             <div class="wedding-card-img">
-                <img src="${product.image}" alt="${product.title}" loading="lazy">
+                <img src="${product.image}" alt="${product.title}">
             </div>
             <div class="wedding-card-body">
                 <h3>${product.title}</h3>
@@ -651,58 +649,17 @@ function initWeddingSection() {
     };
 
     const items = weddingCollection.items;
-    // Render: clones-at-end + real cards + clones-at-start for infinite loop
-    const realHTML = items.map(buildCard).join('');
-    const clonesEnd = items.slice(0, 3).map(buildCard).join('');   // shown after last real card
-    const clonesStart = items.slice(-3).map(buildCard).join('');   // shown before first real card
-    cardsContainer.innerHTML = clonesStart + realHTML + clonesEnd;
 
-    // Mark clone groups so we can skip over them
-    const allCards = cardsContainer.querySelectorAll('.wedding-card');
-    const totalReal = items.length;
-    const clonesBefore = Math.min(3, totalReal);
-    const clonesAfter = Math.min(3, totalReal);
+    // For a smooth CSS marquee, we need enough elements so the duplication covers the screen width twice
+    // We'll duplicate the original array a few times to ensure it's wide enough for all screens
+    const originalCardsHTML = items.map(buildCard).join('');
 
-    // Jump past leading clones on init (without animation)
-    requestAnimationFrame(() => {
-        const card = cardsContainer.querySelector('.wedding-card');
-        const cardW = card ? card.offsetWidth + 20 : 220;
-        cardsContainer.scrollLeft = clonesBefore * cardW;
-    });
-
-    // Infinite scroll: silently jump when user scrolls into clone zones
-    cardsContainer.addEventListener('scroll', () => {
-        if (_weddingIsScrolling) return;
-        const card = cardsContainer.querySelector('.wedding-card');
-        const cardW = card ? card.offsetWidth + 20 : 220;
-        const realStart = clonesBefore * cardW;
-        const realEnd = (clonesBefore + totalReal) * cardW;
-        const trackWidth = cardsContainer.scrollWidth;
-
-        if (cardsContainer.scrollLeft < cardW * 0.5) {
-            // Scrolled too far left into leading clones → jump to real end
-            _weddingIsScrolling = true;
-            cardsContainer.style.scrollBehavior = 'auto';
-            cardsContainer.scrollLeft = realEnd - cardW;
-            cardsContainer.style.scrollBehavior = '';
-            requestAnimationFrame(() => { _weddingIsScrolling = false; });
-        } else if (cardsContainer.scrollLeft >= trackWidth - cardsContainer.offsetWidth - cardW * 0.5) {
-            // Scrolled too far right into trailing clones → jump to real start
-            _weddingIsScrolling = true;
-            cardsContainer.style.scrollBehavior = 'auto';
-            cardsContainer.scrollLeft = realStart;
-            cardsContainer.style.scrollBehavior = '';
-            requestAnimationFrame(() => { _weddingIsScrolling = false; });
-        }
-    });
-}
-
-function weddingSlide(direction) {
-    const track = document.getElementById('wedding-cards');
-    if (!track) return;
-    const card = track.querySelector('.wedding-card');
-    const scrollAmount = card ? card.offsetWidth + 20 : 220;
-    track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    // Create 4 sets of the cards to ensure continuous scrolling
+    cardsContainer.innerHTML =
+        originalCardsHTML +
+        originalCardsHTML +
+        originalCardsHTML +
+        originalCardsHTML;
 }
 
 function showSuccessModal(name, total, paymentMethod, phone) {

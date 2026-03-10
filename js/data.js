@@ -1,5 +1,45 @@
 const products = [
     {
+        id: 18,
+        title: "White Serenity",
+        price: 125.00,
+        image: "white_serenity.png",
+        categories: ["birthday"],
+        featured: false,
+        description: "An elegant arrangement of pure white chrysanthemums and delicate filler flowers, perfect for conveying peaceful birthday wishes.",
+        sizes: [
+            { id: 'small', name: 'Small (10 items)', price: 75.00 },
+            { id: 'medium', name: 'Medium (18 items)', price: 125.00 },
+            { id: 'large', name: 'Large (26 items)', price: 170.00 }
+        ]
+    },
+    {
+        id: 17,
+        title: "Unspoken Desire",
+        price: 130.00,
+        image: "unspoken_desire.png",
+        categories: ["romance"],
+        featured: false,
+        description: "A romantic and striking arrangement of pristine white lisianthus and deep burgundy tulips.",
+        sizes: [
+            { id: 'small', name: 'Small (14 items)', price: 80.00 },
+            { id: 'medium', name: 'Medium (22 items)', price: 130.00 },
+            { id: 'large', name: 'Large (30 items)', price: 190.00 }
+        ]
+    },
+    {
+        id: 16,
+        title: "Cloud Nine",
+        price: 140.00,
+        image: "cloud_nine.png",
+        categories: ["anniversary"],
+        featured: false,
+        description: "A beautiful basket arrangement of blue hydrangeas, peach roses, and white blooms.",
+        sizes: [
+            { id: 'standard', name: 'Standard (18 items)', price: 140.00 }
+        ]
+    },
+    {
         id: 12,
         title: "Soft Couture",
         price: 180.00,

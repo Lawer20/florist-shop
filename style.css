@@ -2602,76 +2602,50 @@ footer {
     margin-top: 4px;
 }
 
-/* ---- Ready-to-Order Slider ---- */
-.wedding-slider-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 0;
+/* ---- CSS Marquee Slider ---- */
+.marquee-wrap {
+    overflow: hidden;
+    width: 100%;
     margin-bottom: 44px;
-    z-index: 1;
+    position: relative;
+    /* Optional edge gradients to fade in/out */
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
 
-.wedding-slider-track {
+.marquee-track {
     display: flex;
     gap: 20px;
-    overflow-x: scroll;
-    /* scrollable — JS controls position */
-    flex: 1;
-    min-width: 0;
-    padding: 8px 4px 16px;
-    /* allow card shadows to show */
-    -ms-overflow-style: none;
-    /* IE / Edge */
-    scrollbar-width: none;
-    /* Firefox */
+    width: max-content;
+    animation: marqueeScroll 25s linear infinite;
+    padding: 10px 0 20px 0;
+    /* padding for shadows */
 }
 
-.wedding-slider-track::-webkit-scrollbar {
-    display: none;
-    /* Chrome / Safari */
+.marquee-track:hover {
+    animation-play-state: paused;
 }
 
-/* Each card in the slider stays fixed width */
-.wedding-slider-track .wedding-card {
+/* 
+Each card in the slider stays fixed width 
+If we want them to scale down on mobile, we can use max-width or media queries,
+but keeping a fixed width is standard for marquees.
+*/
+.marquee-track .wedding-card {
     flex: 0 0 220px;
     min-width: 220px;
 }
 
-/* Arrow buttons */
-.wedding-slider-btn {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(193, 163, 109, 0.45);
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(6px);
-    color: #8a6d3b;
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.25s ease;
-    z-index: 2;
-    box-shadow: 0 2px 10px rgba(193, 163, 109, 0.15);
-}
+@keyframes marqueeScroll {
+    0% {
+        transform: translateX(0);
+    }
 
-.wedding-slider-btn:hover {
-    background: #c1a36d;
-    color: #fff;
-    border-color: #c1a36d;
-    box-shadow: 0 4px 16px rgba(193, 163, 109, 0.4);
-    transform: scale(1.08);
-}
-
-.wedding-slider-prev {
-    margin-right: 12px;
-}
-
-.wedding-slider-next {
-    margin-left: 12px;
+    100% {
+        /* Scroll half the track width exactly (since we duplicated the content 4x, 
+           scrolling halfway completes a flawless loop if the track has 2 identical halves) */
+        transform: translateX(calc(-50% - 10px));
+    }
 }
 
 @media (max-width: 600px) {
