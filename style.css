@@ -3453,29 +3453,69 @@ main {
 
 /* Scroll-to-Top */
 .scroll-to-top {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(20px);
+    transform: translateY(20px) scale(0.9);
+    color: white;
+    border-radius: 14px;
+    width: 50px;
+    height: 50px;
 }
 
 .scroll-to-top.visible {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+}
+
+.scroll-to-top::before {
+    content: 'TOP';
+    position: absolute;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0);
+    transition: all 0.35s ease;
+    font-family: var(--font-body);
+}
+
+.scroll-to-top:hover::before {
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .scroll-to-top:hover {
-    box-shadow: 0 8px 28px rgba(216, 167, 177, 0.6);
-    background: linear-gradient(135deg, var(--color-primary-dark), #b07a85);
+    background: rgba(216, 167, 177, 0.25);
+    border-color: rgba(216, 167, 177, 0.4);
+    box-shadow: 0 12px 40px rgba(216, 167, 177, 0.3);
+    transform: translateY(-4px) scale(1.05);
 }
 
-.scroll-to-top svg {
-    transition: transform 0.3s ease;
+.scroll-arrow {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.scroll-to-top:hover svg {
-    transform: translateY(-2px);
+.scroll-to-top:hover .scroll-arrow {
+    transform: translateY(-4px) scale(0.85);
+    opacity: 0.6;
+}
+
+/* Subtle float animation */
+@keyframes floatHint {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.scroll-to-top.visible {
+    animation: floatHint 3s ease-in-out infinite;
+}
+
+.scroll-to-top.visible:hover {
+    animation: none;
 }
 
 /* Floating Social (Instagram) */
@@ -3525,6 +3565,24 @@ main {
     .floating-btn svg {
         width: 18px;
         height: 18px;
+    }
+
+    .scroll-to-top {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+    }
+
+    .scroll-to-top::before {
+        display: none;
+    }
+}
+
+@media (max-width: 375px) {
+    .scroll-to-top {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
     }
 }
 
