@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vita-flowers-v2';
+const CACHE_NAME = 'vita-flowers-v4';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -21,6 +21,7 @@ self.addEventListener('install', (event) => {
                 return cache.addAll(ASSETS_TO_CACHE);
             })
     );
+    self.skipWaiting();
 });
 
 self.addEventListener('fetch', (event) => {
@@ -34,8 +35,10 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Network-first for HTML pages (ensures fresh content)
-    if (event.request.destination === 'document') {
+    // Network-first for HTML pages, JS scripts, and CSS styles (ensures fresh content)
+    if (event.request.destination === 'document' || 
+        event.request.destination === 'script' || 
+        event.request.destination === 'style') {
         event.respondWith(
             fetch(event.request)
                 .then((response) => {
@@ -84,6 +87,6 @@ self.addEventListener('activate', (event) => {
                     }
                 })
             );
-        })
+        }).then(() => self.clients.claim())
     );
 });
