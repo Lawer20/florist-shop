@@ -3552,6 +3552,44 @@ main {
     animation: none;
 }
 
+/* Floating Phone */
+.floating-phone-btn {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    background-size: 200% 200%;
+    animation: phoneGlow 4s ease-in-out infinite;
+}
+
+.floating-phone-btn:hover {
+    box-shadow: 0 8px 28px rgba(76, 175, 80, 0.5);
+}
+
+.floating-phone-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.floating-phone-btn:hover svg {
+    transform: scale(1.1);
+}
+
+@keyframes phoneGlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.floating-phone-btn::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(76, 175, 80, 0.25);
+    animation: phonePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes phonePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.12); opacity: 0; }
+}
+
 /* Floating Social (Instagram) */
 .floating-social-btn {
     background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
