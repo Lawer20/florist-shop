@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vita-flowers-v4';
+const CACHE_NAME = 'florist-shop-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
