@@ -105,6 +105,20 @@
             </div>
         </section>
 
+        <!-- Product Gallery / Shop Preview -->
+        <section id="shop" class="shop-section">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2>Premium Collections</h2>
+                    <p class="section-desc">Hand-picked favorites for your special moments.</p>
+                </div>
+
+                <div id="product-grid" class="product-grid">
+                    <!-- Products will be injected here via JS -->
+                </div>
+            </div>
+        </section>
+
         <!-- ===== SEASONAL SECTION ===== -->
         <section id="seasonal-section" class="seasonal-section" style="display:none;">
             <div class="seasonal-petals" aria-hidden="true">
@@ -227,19 +241,7 @@
             </div>
         </section>
 
-        <!-- Product Gallery / Shop Preview -->
-        <section id="shop" class="shop-section">
-            <div class="container">
-                <div class="section-header text-center">
-                    <h2>Premium Collections</h2>
-                    <p class="section-desc">Hand-picked favorites for your special moments.</p>
-                </div>
 
-                <div id="product-grid" class="product-grid">
-                    <!-- Products will be injected here via JS -->
-                </div>
-            </div>
-        </section>
 
         <!-- Wedding Teaser Banner -->
         <section class="wedding-teaser">
@@ -251,6 +253,36 @@
                         for you.</p>
                 </div>
                 <a href="#wedding-section" class="btn btn-wedding">Explore Wedding Florals</a>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section" style="padding: 80px 0; background: var(--color-bg);">
+            <div class="container">
+                <div class="section-header text-center" style="margin-bottom: 50px;">
+                    <h2>What Our Customers Say</h2>
+                    <p class="section-desc">Real stories from our lovely clients in Chicago and Elmwood Park</p>
+                </div>
+                <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div class="testimonial-card" style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid #f5f5f5; transition: transform 0.3s ease;">
+                        <div class="stars" style="color: var(--color-primary); font-size: 1.2rem; margin-bottom: 15px;">★★★★★</div>
+                        <p style="font-style: italic; color: #555; margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">"Absolutely stunning bouquets! I ordered 'Soft Couture' for my mother's birthday and she was in tears. The colors and freshness of the roses were incredible. Outstanding service in Chicago area!"</p>
+                        <strong style="display: block; font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-heading);">Sarah M.</strong>
+                        <span style="font-size: 0.8rem; color: #999; text-transform: uppercase; letter-spacing: 1px;">Chicago, IL</span>
+                    </div>
+                    <div class="testimonial-card" style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid #f5f5f5; transition: transform 0.3s ease;">
+                        <div class="stars" style="color: var(--color-primary); font-size: 1.2rem; margin-bottom: 15px;">★★★★★</div>
+                        <p style="font-style: italic; color: #555; margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">"V.A.Y Studio did the florals for our wedding in Elmwood Park, and everything was breathtaking. The bridal bouquet was so elegant and minimalist, exactly what I wanted. Thank you so much!"</p>
+                        <strong style="display: block; font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-heading);">Emily K.</strong>
+                        <span style="font-size: 0.8rem; color: #999; text-transform: uppercase; letter-spacing: 1px;">Elmwood Park, IL</span>
+                    </div>
+                    <div class="testimonial-card" style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid #f5f5f5; transition: transform 0.3s ease;">
+                        <div class="stars" style="color: var(--color-primary); font-size: 1.2rem; margin-bottom: 15px;">★★★★★</div>
+                        <p style="font-style: italic; color: #555; margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">"Fast and fresh delivery, the flower design is very modern and feels extremely high-end. I love their editorial packaging. Will definitely order all my anniversary flowers from V.A.Y Studio!"</p>
+                        <strong style="display: block; font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-heading);">David L.</strong>
+                        <span style="font-size: 0.8rem; color: #999; text-transform: uppercase; letter-spacing: 1px;">River Forest, IL</span>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -285,7 +317,7 @@
                 <!-- Removed default contact form to prioritize checkout flow, kept info -->
                 <div class="contact-image-decoration">
                     <!-- Optional: Put an image here or just leave the text details centered/styled differently later -->
-                    <img src="hero_flowers_background.png" alt="Flowers" style="border-radius: 8px; opacity: 0.8;">
+                    <img src="hero_flowers_background.webp" alt="Flowers" style="border-radius: 8px; opacity: 0.8;">
                 </div>
             </div>
         </section>
@@ -319,8 +351,8 @@
                     <ul class="footer-links">
                         <li><a href="about.html">Our Story</a></li>
                         <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="#">Delivery Info</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="javascript:openDeliveryModal()">Delivery Info</a></li>
+                        <li><a href="javascript:openPrivacyModal()">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -347,7 +379,7 @@
                 <button class="close-btn" onclick="closeModal('custom-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="modal-subtitle">Enhance your bouquet with our premium add-ons.</p>
+
 
                 <div class="size-selection-section">
                     <h4 style="margin-bottom: 10px; font-family: var(--font-heading);">Select Size</h4>
@@ -356,10 +388,7 @@
                     </div>
                 </div>
 
-                <h4 style="margin: 20px 0 10px; font-family: var(--font-heading); display: none;">Add Extras</h4>
-                <div id="addons-list" class="addons-list" style="display: none;">
-                    <!-- Add-ons injected via JS -->
-                </div>
+
                 <div class="total-section">
                     <span>Total Estimate:</span>
                     <span id="modal-total-price" class="total-price">$0.00</span>
@@ -513,9 +542,19 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=104"></script>
-    <script src="card_payment.js?v=104"></script>
-    <script src="main.js?v=104"></script>
+    <!-- Scroll-to-Top Button -->
+    <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">↑</button>
+
+    <!-- Floating Social Buttons -->
+    <div class="floating-social">
+        <a href="https://www.instagram.com/vay_flower_studio?igsh=MTkzMmdodXYzdnpjbA==" target="_blank" rel="noopener noreferrer" class="floating-social-btn instagram" aria-label="Instagram">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+</a>
+    </div>
+
+    <script src="js/data.js?v=106"></script>
+    <script src="card_payment.js?v=106"></script>
+    <script src="main.js?v=106"></script>
 </body>
 
 </html>

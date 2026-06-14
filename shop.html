@@ -173,7 +173,7 @@
 
     <main>
         <section class="page-hero">
-            <!-- Text removed for cleaner look -->
+            <span class="page-hero-title">Shop</span>
         </section>
 
         <div class="breadcrumbs-strip">
@@ -237,8 +237,8 @@
                     <ul class="footer-links">
                         <li><a href="about.html">Our Story</a></li>
                         <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="#">Delivery Info</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="javascript:openDeliveryModal()">Delivery Info</a></li>
+                        <li><a href="javascript:openPrivacyModal()">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -266,7 +266,7 @@
                 <button class="close-btn" onclick="closeModal('custom-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="modal-subtitle">Enhance your bouquet with our premium add-ons.</p>
+
 
                 <div class="size-selection-section">
                     <h4 style="margin-bottom: 10px; font-family: var(--font-heading);">Select Size</h4>
@@ -275,8 +275,7 @@
                     </div>
                 </div>
 
-                <h4 style="margin: 20px 0 10px; font-family: var(--font-heading); display: none;">Add Extras</h4>
-                <div id="addons-list" class="addons-list" style="display: none;"></div>
+
                 <div class="total-section">
                     <span>Total Estimate:</span>
                     <span id="modal-total-price" class="total-price">$0.00</span>
@@ -428,9 +427,19 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=104"></script>
-    <script src="card_payment.js?v=104"></script>
-    <script src="main.js?v=104"></script>
+    <!-- Scroll-to-Top Button -->
+    <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">↑</button>
+
+    <!-- Floating Social Buttons -->
+    <div class="floating-social">
+        <a href="https://www.instagram.com/vay_flower_studio?igsh=MTkzMmdodXYzdnpjbA==" target="_blank" rel="noopener noreferrer" class="floating-social-btn instagram" aria-label="Instagram">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+</a>
+    </div>
+
+    <script src="js/data.js?v=106"></script>
+    <script src="card_payment.js?v=106"></script>
+    <script src="main.js?v=106"></script>
     <script>
         // Force unregister stale service workers if they block updates
         if ('serviceWorker' in navigator) {
@@ -445,7 +454,7 @@
             // Initial Render: All
             const container = document.getElementById('shop-products-grid');
             if (container) {
-                renderProductGrid(container, products);
+                renderProductGrid(container, products.filter(p => !p.seasonal && !p.wedding && !p.hidden));
 
                 // Check URL params for category
                 const urlParams = new URLSearchParams(window.location.search);
@@ -468,18 +477,18 @@
             if (activeBtn) activeBtn.classList.add('active');
 
             if (category === 'all') {
-                renderProductGrid(container, products.filter(p => !p.seasonal && !p.wedding));
+                renderProductGrid(container, products.filter(p => !p.seasonal && !p.wedding && !p.hidden));
                 title.textContent = "All Bouquets";
             } else if (category === 'seasonal') {
-                const filtered = (typeof seasonalCollection !== 'undefined' && seasonalCollection.items) ? seasonalCollection.items : products.filter(p => p.seasonal);
+                const filtered = (typeof seasonalCollection !== 'undefined' && seasonalCollection.items) ? seasonalCollection.items.filter(p => !p.hidden) : products.filter(p => p.seasonal && !p.hidden);
                 renderProductGrid(container, filtered);
                 title.textContent = "Spring Collection";
             } else if (category === 'wedding') {
-                const filtered = (typeof weddingCollection !== 'undefined' && weddingCollection.items) ? weddingCollection.items : products.filter(p => p.wedding);
+                const filtered = (typeof weddingCollection !== 'undefined' && weddingCollection.items) ? weddingCollection.items.filter(p => !p.hidden) : products.filter(p => p.wedding && !p.hidden);
                 renderProductGrid(container, filtered);
                 title.textContent = "Wedding Collection";
             } else {
-                const filtered = products.filter(p => p.categories.includes(category) && !p.seasonal && !p.wedding);
+                const filtered = products.filter(p => p.categories.includes(category) && !p.seasonal && !p.wedding && !p.hidden);
                 renderProductGrid(container, filtered);
                 title.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ') + " Collection";
             }

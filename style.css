@@ -269,7 +269,7 @@ img {
     height: 90vh;
     /* Almost full screen */
     margin-top: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('./hero_flowers_background.png');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('./hero_flowers_background.webp');
     /* Will use generated image */
     background-size: cover;
     background-position: center;
@@ -400,6 +400,37 @@ img {
 
 .product-card:hover .img-wrapper img {
     transform: scale(1.05);
+}
+
+/* New product badge */
+.img-wrapper {
+    position: relative;
+}
+
+.product-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 2;
+    background: var(--color-primary-dark);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(192, 138, 149, 0.4);
+}
+
+.product-card--new {
+    box-shadow: 0 12px 40px rgba(192, 138, 149, 0.18);
+    border: 1px solid rgba(216, 167, 177, 0.25);
+}
+
+.product-card--new:hover {
+    box-shadow: 0 20px 50px rgba(192, 138, 149, 0.28);
 }
 
 .product-info {
@@ -689,8 +720,8 @@ footer {
         flex-direction: column;
         justify-content: center;
         gap: 6px;
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         background: white;
         border-radius: 50%;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -720,7 +751,7 @@ footer {
 
 .page-hero {
     height: 150px;
-    background: url('images/hero_flowers_background.png') center/cover no-repeat;
+    background: url('./hero_flowers_background.webp') center/cover no-repeat;
     /* Fixed header sits on top, so we don't need negative margin */
     margin-top: 0;
     padding-top: 85px;
@@ -3236,5 +3267,290 @@ but keeping a fixed width is standard for marquees.
         margin-bottom: 0;
         padding: 8px 0;
         font-size: 0.8rem;
+    }
+}
+
+/* Testimonials Hover */
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* --- Add-ons in Modal --- */
+.addons-list {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    .addons-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+.addon-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.addon-option:hover {
+    border-color: var(--color-primary);
+    background: #fff;
+}
+
+.addon-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.addon-img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #eee;
+}
+
+.addon-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4A4A4A;
+}
+
+.addon-price {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+}
+
+/* =====================================================
+   PAGE TRANSITIONS — Fade between pages
+   ===================================================== */
+main {
+    animation: pageFadeIn 0.5s ease-out;
+}
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================================
+   PAGE-HERO HEADINGS
+   ===================================================== */
+.page-hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-hero-title {
+    position: relative;
+    z-index: 2;
+    color: white;
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .page-hero-title {
+        font-size: 1.6rem;
+    }
+}
+
+/* =====================================================
+   CART BOUNCE ANIMATION
+   ===================================================== */
+@keyframes cartBounce {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.35); }
+    50% { transform: scale(0.9); }
+    75% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.cart-count.bounce {
+    animation: cartBounce 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* =====================================================
+   SCROLL-TO-TOP BUTTON
+   ===================================================== */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 16px rgba(216, 167, 177, 0.4);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(216, 167, 177, 0.6);
+}
+
+.scroll-to-top:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+    .scroll-to-top {
+        bottom: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+    }
+}
+
+/* =====================================================
+   FLOATING SOCIAL BUTTON
+   ===================================================== */
+.floating-social {
+    position: fixed;
+    bottom: 90px;
+    right: 30px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.floating-social-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.floating-social-btn.instagram {
+    background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+}
+
+.floating-social-btn.instagram:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(221, 42, 123, 0.5);
+}
+
+.floating-social-btn.telegram {
+    background: linear-gradient(135deg, #1da1f2, #0088cc);
+}
+
+.floating-social-btn.telegram:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 136, 204, 0.5);
+}
+
+@media (max-width: 600px) {
+    .floating-social {
+        bottom: 68px;
+        right: 16px;
+    }
+
+    .floating-social-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+    }
+}
+
+/* =====================================================
+   ENHANCED PRODUCT CARD HOVER
+   ===================================================== */
+.product-card {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                box-shadow 0.4s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(216, 167, 177, 0.15);
+}
+
+.product-card:hover .img-wrapper img {
+    transform: scale(1.08);
+}
+
+.img-wrapper img {
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* =====================================================
+   MODAL FADE TRANSITION
+   ===================================================== */
+.modal {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal:not(.hidden) .modal-content {
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }

@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (grid) {
         // Simple check: if this is homepage vs shop page
         // For now, index.html will use 'product-grid' and we filter for featured
-        const featuredProducts = products.filter(p => p.featured);
+        const featuredProducts = products.filter(p => p.featured && !p.hidden);
         renderProductGrid(grid, featuredProducts);
     }
 
@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initDatePickers(); // Initialize date restrictions
     initSeasonalSection(); // Initialize seasonal section
     initWeddingSection(); // Initialize wedding section
+    initScrollToTop(); // Initialize scroll-to-top button
 
     // Initialize Stripe for card payments (from card_payment.js module)
     if (typeof initStripe !== 'undefined') {
@@ -230,6 +231,7 @@ function selectSize(sizeId) {
 
 function renderAddons() {
     const list = document.getElementById('addons-list');
+    if (!list) return;
     list.innerHTML = addOns.map(addon => `
         <label class="addon-option">
             <input type="checkbox" value="${addon.id}" onchange="updateTotal()">
@@ -244,6 +246,9 @@ function renderAddons() {
 
 function closeModal(modalId) {
     document.getElementById(modalId).classList.add('hidden');
+    if (modalId === 'cart-modal') {
+        updateCartCount();
+    }
 }
 
 function updateTotal() {
@@ -289,7 +294,7 @@ function confirmAddToCart() {
 
     cart.push(cartItem);
     saveCartToStorage();
-    updateCartCount();
+    updateCartCount(true);
 
     // Close Modal
     closeModal('custom-modal');
@@ -298,9 +303,15 @@ function confirmAddToCart() {
     openCart();
 }
 
-function updateCartCount() {
+function updateCartCount(animate = false) {
     const count = cart.length;
-    document.getElementById('cart-count').textContent = count;
+    const el = document.getElementById('cart-count');
+    el.textContent = count;
+    if (animate) {
+        el.classList.remove('bounce');
+        void el.offsetWidth;
+        el.classList.add('bounce');
+    }
 }
 
 function openCart() {
@@ -704,4 +715,98 @@ if ('serviceWorker' in navigator) {
                 console.log('ServiceWorker registration failed: ', err);
             });
     });
+}
+
+/* --- Scroll-to-Top Button --- */
+function initScrollToTop() {
+    const btn = document.getElementById('scroll-to-top');
+    if (!btn) return;
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
+    });
+
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+/* --- Information Modals (Delivery & Privacy) --- */
+function openDeliveryModal() {
+    let modal = document.getElementById('delivery-info-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'delivery-info-modal';
+        modal.className = 'modal hidden';
+        modal.innerHTML = `
+            <div class="modal-overlay" onclick="closeModal('delivery-info-modal')"></div>
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>Delivery Information</h3>
+                    <button class="close-btn" onclick="closeModal('delivery-info-modal')">&times;</button>
+                </div>
+                <div class="modal-body" style="line-height: 1.6; color: #4A4A4A;">
+                    <h4 style="font-family: var(--font-heading); margin-bottom: 5px; color: var(--color-heading); font-size: 1.2rem;">🚀 Delivery Areas & Rates</h4>
+                    <p style="margin-bottom: 15px;">We hand-deliver fresh arrangements to Chicago and surrounding suburbs:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 20px;">
+                        <li><strong>Elmwood Park (Local):</strong> Free Delivery</li>
+                        <li><strong>Surrounding Suburbs (within 10 miles):</strong> $10.00</li>
+                        <li><strong>Greater Chicago Area:</strong> $20.00</li>
+                    </ul>
+                    
+                    <h4 style="font-family: var(--font-heading); margin-bottom: 5px; color: var(--color-heading); font-size: 1.2rem;">📅 Schedule & Policies</h4>
+                    <ul style="margin-left: 20px; margin-bottom: 20px;">
+                        <li>Deliveries are available <strong>Monday - Sunday, 9:00 AM to 7:00 PM</strong>.</li>
+                        <li>All orders must be placed <strong>at least 1 day in advance</strong>.</li>
+                        <li>For same-day inquiries, please contact us by phone: <a href="tel:+17348588724" style="color: var(--color-primary-dark); font-weight:600;">734-858-8724</a>.</li>
+                    </ul>
+                    <p style="font-size: 0.9rem; font-style: italic; color: #777;">Note: During peak holidays (Valentine's Day, Mother's Day), we recommend placing orders 3-5 days in advance.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="closeModal('delivery-info-modal')">Got it, thanks!</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.classList.remove('hidden');
+}
+
+function openPrivacyModal() {
+    let modal = document.getElementById('privacy-policy-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'privacy-policy-modal';
+        modal.className = 'modal hidden';
+        modal.innerHTML = `
+            <div class="modal-overlay" onclick="closeModal('privacy-policy-modal')"></div>
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>Privacy Policy</h3>
+                    <button class="close-btn" onclick="closeModal('privacy-policy-modal')">&times;</button>
+                </div>
+                <div class="modal-body" style="line-height: 1.6; color: #4A4A4A; max-height: 350px; overflow-y: auto; padding-right: 10px;">
+                    <p style="margin-bottom: 15px;">At V.A.Y Studio, we respect your privacy. This policy outlines how we handle your personal information.</p>
+                    
+                    <h4 style="font-family: var(--font-heading); margin-top: 15px; margin-bottom: 5px; color: var(--color-heading); font-size: 1.1rem;">Information Collection</h4>
+                    <p style="margin-bottom: 15px;">We collect info you provide when placing an order: name, phone, email, and delivery address. Payment details are processed securely through Stripe and never stored on our servers.</p>
+                    
+                    <h4 style="font-family: var(--font-heading); margin-top: 15px; margin-bottom: 5px; color: var(--color-heading); font-size: 1.1rem;">Information Usage</h4>
+                    <p style="margin-bottom: 15px;">Your data is used solely to process orders, deliver flowers, and contact you if issues arise. We never sell or share your data with third parties, except as required for delivery or payment processing.</p>
+                    
+                    <h4 style="font-family: var(--font-heading); margin-top: 15px; margin-bottom: 5px; color: var(--color-heading); font-size: 1.1rem;">Cookies & Tracking</h4>
+                    <p style="margin-bottom: 15px;">We use basic cookies to keep track of your cart items and use Google Analytics to analyze website traffic and performance.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="closeModal('privacy-policy-modal')">Close</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.classList.remove('hidden');
 }

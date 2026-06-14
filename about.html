@@ -66,7 +66,7 @@
 
     <main>
         <section class="page-hero">
-            <!-- Text removed for cleaner look -->
+            <span class="page-hero-title">Our Story</span>
         </section>
 
         <div class="breadcrumbs-strip">
@@ -143,8 +143,8 @@
                     <ul class="footer-links">
                         <li><a href="about.html">Our Story</a></li>
                         <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="#">Delivery Info</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="javascript:openDeliveryModal()">Delivery Info</a></li>
+                        <li><a href="javascript:openPrivacyModal()">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -162,7 +162,38 @@
         </div>
     </footer>
 
-    <!-- Shared Modals -->
+    <!-- Customization Modal -->
+    <div id="custom-modal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeModal('custom-modal')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-product-title">Customize Your Gift</h3>
+                <button class="close-btn" onclick="closeModal('custom-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="size-selection-section">
+                    <h4 style="margin-bottom: 10px; font-family: var(--font-heading);">Select Size</h4>
+                    <div id="size-options" class="size-options-container">
+                        <!-- Sizes injected by JS -->
+                    </div>
+                </div>
+
+
+                <div class="total-section">
+                    <span>Total Estimate:</span>
+                    <span id="modal-total-price" class="total-price">$0.00</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary text-dark" onclick="closeModal('custom-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAddToCart()">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
     <div id="cart-modal" class="modal hidden">
         <div class="modal-overlay" onclick="closeModal('cart-modal')"></div>
         <div class="modal-content">
@@ -171,7 +202,10 @@
                 <button class="close-btn" onclick="closeModal('cart-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="cart-items" class="cart-items"></div>
+                <div id="cart-items" class="cart-items">
+                    <!-- Cart Items injected here -->
+                    <p class="empty-cart-msg">Your cart is empty.</p>
+                </div>
                 <div class="total-section">
                     <span>Total:</span>
                     <span id="cart-total-price" class="total-price">$0.00</span>
@@ -184,7 +218,7 @@
         </div>
     </div>
 
-    <!-- Checkout Modal (Just in case user goes to checkout from here) -->
+    <!-- Checkout Modal -->
     <div id="checkout-modal" class="modal hidden">
         <div class="modal-overlay" onclick="closeModal('checkout-modal')"></div>
         <div class="modal-content">
@@ -204,25 +238,70 @@
                         <input type="tel" id="cust-phone" required placeholder="Your Phone">
                     </div>
                     <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="cust-email" required placeholder="Your Email">
+                    </div>
+                    <div class="form-group">
                         <label>Delivery Address</label>
                         <textarea id="cust-address" required placeholder="Full Address"></textarea>
                     </div>
+
+                    <h4>Preferred Schedule</h4>
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label>Date</label>
+                            <input type="date" id="cust-date" class="styled-date-input" required>
+                        </div>
+                        <div class="form-group half-width">
+                            <label>Time (Approx.)</label>
+                            <select id="cust-time" class="styled-time-select" required>
+                                <option value="">Select time...</option>
+                                <option value="07:00">7:00 AM</option>
+                                <option value="08:00">8:00 AM</option>
+                                <option value="09:00">9:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                                <option value="19:00">7:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <h4>Payment Method</h4>
                     <div class="payment-options">
                         <label class="payment-option">
-                            <input type="radio" name="payment" value="zelle" checked>
+                            <input type="radio" name="payment" value="card" onchange="handlePaymentMethodChange()"
+                                checked>
+                            <span class="pay-label">💳 Credit/Debit Card</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="zelle" onchange="handlePaymentMethodChange()">
                             <span class="pay-label">Zelle</span>
                         </label>
 
                         <label class="payment-option">
-                            <input type="radio" name="payment" value="cash">
+                            <input type="radio" name="payment" value="cash" onchange="handlePaymentMethodChange()">
                             <span class="pay-label">Cash on Delivery</span>
                         </label>
                     </div>
+
+                    <!-- Card Payment Element (shows when card is selected) -->
+                    <div id="card-element-container" class="card-element-wrapper hidden">
+                        <!-- Stripe card element will be mounted here -->
+                    </div>
+                    <div id="card-errors" class="card-errors" role="alert"></div>
+
                     <div class="total-section">
                         <span>Total to Pay:</span>
                         <span id="checkout-total" class="total-price">$0.00</span>
                     </div>
+
                     <button type="submit" class="btn btn-primary full-width" style="margin-top: 20px;">Place
                         Order</button>
                 </form>
@@ -255,8 +334,19 @@
         </div>
     </div>
 
-    <script src="js/data.js"></script>
-    <script src="main.js?v=5"></script>
+    <!-- Scroll-to-Top Button -->
+    <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">↑</button>
+
+    <!-- Floating Social Buttons -->
+    <div class="floating-social">
+        <a href="https://www.instagram.com/vay_flower_studio?igsh=MTkzMmdodXYzdnpjbA==" target="_blank" rel="noopener noreferrer" class="floating-social-btn instagram" aria-label="Instagram">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+</a>
+    </div>
+
+    <script src="js/data.js?v=106"></script>
+    <script src="card_payment.js?v=106"></script>
+    <script src="main.js?v=106"></script>
 </body>
 
 </html>
