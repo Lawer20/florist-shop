@@ -3552,11 +3552,18 @@ main {
     animation: none;
 }
 
-/* Floating Phone */
+/* Floating Phone — Mobile only */
 .floating-phone-btn {
+    display: none;
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     background-size: 200% 200%;
     animation: phoneGlow 4s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+    .floating-phone-btn {
+        display: flex;
+    }
 }
 
 .floating-phone-btn:hover {
