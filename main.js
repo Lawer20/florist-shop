@@ -629,9 +629,7 @@ function initSeasonalSection() {
     section.style.display = 'block';
 }
 
-/* --- Wedding Section --- */
-let _weddingIsScrolling = false;
-
+/* --- Wedding Section: Infinite Interactive Carousel --- */
 function initWeddingSection() {
     const section = document.getElementById('wedding-section');
     if (!section) return;
@@ -640,15 +638,18 @@ function initWeddingSection() {
         return;
     }
 
-    const cardsContainer = document.getElementById('wedding-cards');
-    if (!cardsContainer) return;
+    const viewport = document.getElementById('wedding-slider-viewport');
+    const track = document.getElementById('wedding-cards');
+    if (!viewport || !track) return;
+
+    const isMobile = () => window.innerWidth <= 768;
 
     const buildCard = (product) => {
         const price = product.sizes ? product.sizes[0].price : product.price;
         return `
         <div class="wedding-card" onclick="openModal(${product.id})">
             <div class="wedding-card-img">
-                <img src="${product.image}" alt="${product.title}">
+                <img src="${product.image}" alt="${product.title}" loading="lazy">
             </div>
             <div class="wedding-card-body">
                 <h3>${product.title}</h3>
@@ -661,16 +662,147 @@ function initWeddingSection() {
 
     const items = weddingCollection.items;
 
-    // For a smooth CSS marquee, we need enough elements so the duplication covers the screen width twice
-    // We'll duplicate the original array a few times to ensure it's wide enough for all screens
-    const originalCardsHTML = items.map(buildCard).join('');
+    // On mobile: simple scroll snap, no JS carousel
+    if (isMobile()) {
+        track.innerHTML = items.map(buildCard).join('');
+        return;
+    }
 
-    // Create 4 sets of the cards to ensure continuous scrolling
-    cardsContainer.innerHTML =
-        originalCardsHTML +
-        originalCardsHTML +
-        originalCardsHTML +
-        originalCardsHTML;
+    // Desktop: infinite carousel with arrows
+    const totalItems = items.length;
+
+    // Build HTML: last item clone + all items + first item clone
+    const cardsHTML = items.map(buildCard).join('');
+    const lastCloneHTML = buildCard(items[totalItems - 1]);
+    const firstCloneHTML = buildCard(items[0]);
+
+    track.innerHTML = lastCloneHTML + cardsHTML + firstCloneHTML;
+
+    // Get card width + gap
+    const getCardWidth = () => {
+        const card = track.querySelector('.wedding-card');
+        if (!card) return 280;
+        const style = window.getComputedStyle(track);
+        const gap = parseInt(style.gap) || 20;
+        return card.offsetWidth + gap;
+    };
+
+    let currentIndex = 1; // Start at first real item (after clone)
+
+    const updateSlider = (animate = true) => {
+        const cardWidth = getCardWidth();
+        if (!animate) track.style.transition = 'none';
+        track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+        if (!animate) {
+            void track.offsetHeight;
+            track.style.transition = '';
+        }
+    };
+
+    // Initial position
+    setTimeout(() => updateSlider(), 50);
+
+    // Arrow buttons
+    const prevBtn = section.querySelector('.wedding-slider-prev');
+    const nextBtn = section.querySelector('.wedding-slider-next');
+
+    const goNext = () => {
+        currentIndex++;
+        updateSlider();
+
+        // If at last clone, jump to first real item
+        if (currentIndex >= totalItems + 1) {
+            setTimeout(() => {
+                currentIndex = 1;
+                updateSlider(false);
+            }, 500);
+        }
+    };
+
+    const goPrev = () => {
+        currentIndex--;
+        updateSlider();
+
+        // If at first clone, jump to last real item
+        if (currentIndex <= 0) {
+            setTimeout(() => {
+                currentIndex = totalItems;
+                updateSlider(false);
+            }, 500);
+        }
+    };
+
+    if (prevBtn) prevBtn.addEventListener('click', goPrev);
+    if (nextBtn) nextBtn.addEventListener('click', goNext);
+
+    // Touch / drag support on desktop
+    let isDragging = false;
+    let startX = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let dragStartIndex = 0;
+
+    const onDragStart = (e) => {
+        isDragging = true;
+        dragStartIndex = currentIndex;
+        startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        const cardWidth = getCardWidth();
+        prevTranslate = -(currentIndex * cardWidth);
+        track.classList.add('dragging');
+    };
+
+    const onDragMove = (e) => {
+        if (!isDragging) return;
+        const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        const diff = currentX - startX;
+        const cardWidth = getCardWidth();
+        currentTranslate = prevTranslate + diff;
+        track.style.transform = `translateX(${currentTranslate}px)`;
+    };
+
+    const onDragEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        track.classList.remove('dragging');
+
+        const cardWidth = getCardWidth();
+        const moved = -(currentTranslate - prevTranslate);
+        const threshold = cardWidth * 0.3;
+
+        if (Math.abs(moved) > threshold) {
+            if (moved > 0) {
+                goNext();
+            } else {
+                goPrev();
+            }
+        } else {
+            updateSlider();
+        }
+    };
+
+    // Mouse events
+    track.addEventListener('mousedown', onDragStart);
+    window.addEventListener('mousemove', onDragMove);
+    window.addEventListener('mouseup', onDragEnd);
+
+    // Touch events
+    track.addEventListener('touchstart', onDragStart, { passive: true });
+    window.addEventListener('touchmove', onDragMove, { passive: true });
+    window.addEventListener('touchend', onDragEnd);
+
+    // Recalc on resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (isMobile()) {
+                track.innerHTML = items.map(buildCard).join('');
+                track.style.transform = '';
+            } else if (track.children.length === totalItems + 2) {
+                updateSlider(false);
+            }
+        }, 200);
+    });
 }
 
 function showSuccessModal(name, total, paymentMethod, phone) {
