@@ -3554,13 +3554,13 @@ main {
 
 /* Floating Phone */
 .floating-phone-btn {
-    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     background-size: 200% 200%;
     animation: phoneGlow 4s ease-in-out infinite;
 }
 
 .floating-phone-btn:hover {
-    box-shadow: 0 8px 28px rgba(76, 175, 80, 0.5);
+    box-shadow: 0 8px 28px rgba(216, 167, 177, 0.5);
 }
 
 .floating-phone-btn svg {
@@ -3581,7 +3581,7 @@ main {
     position: absolute;
     inset: -4px;
     border-radius: 50%;
-    border: 2px solid rgba(76, 175, 80, 0.25);
+    border: 2px solid rgba(216, 167, 177, 0.25);
     animation: phonePulse 2.5s ease-in-out infinite;
 }
 
