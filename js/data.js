@@ -61,7 +61,7 @@ const products = [
         price: 140.00,
         image: "cloud_nine.webp",
         categories: ["anniversary"],
-        featured: false,
+        featured: true,
         description: "A beautiful basket arrangement of blue hydrangeas, peach roses, and white blooms.",
         sizes: [
             { id: 'standard', name: 'Standard (18 items)', price: 140.00 }
@@ -98,7 +98,7 @@ const products = [
         price: 140.00,
         image: "moonlight_blush.webp",
         categories: ["sympathy"],
-        featured: false,
+        featured: true,
         description: "A calming composition of white chrysanthemums, cream roses, and delicate red tulip accents, perfectly suited to convey heartfelt sympathy.",
         sizes: [
             { id: 'medium', name: 'Medium (28 items)', price: 140.00 },
@@ -111,7 +111,7 @@ const products = [
         price: 80.00,
         image: "morning_breeze.webp",
         categories: ["anniversary"],
-        featured: false,
+        featured: true,
         description: "A refreshing blend of soft peach roses, white chrysanthemums, and bright blue hydrangeas, capturing the essence of a serene morning.",
         sizes: [
             { id: 'small', name: 'Small (20 items)', price: 80.00 },
