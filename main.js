@@ -642,8 +642,6 @@ function initWeddingSection() {
     const track = document.getElementById('wedding-cards');
     if (!viewport || !track) return;
 
-    const isMobile = () => window.innerWidth <= 768;
-
     const buildCard = (product) => {
         const price = product.sizes ? product.sizes[0].price : product.price;
         return `
@@ -661,14 +659,6 @@ function initWeddingSection() {
     };
 
     const items = weddingCollection.items;
-
-    // On mobile: simple scroll snap, no JS carousel
-    if (isMobile()) {
-        track.innerHTML = items.map(buildCard).join('');
-        return;
-    }
-
-    // Desktop: infinite carousel with arrows
     const totalItems = items.length;
 
     // Build HTML: last item clone + all items + first item clone
@@ -677,6 +667,24 @@ function initWeddingSection() {
     const firstCloneHTML = buildCard(items[0]);
 
     track.innerHTML = lastCloneHTML + cardsHTML + firstCloneHTML;
+
+    // Dots indicator
+    const dotsContainer = document.getElementById('wedding-slider-dots');
+    if (dotsContainer) {
+        dotsContainer.innerHTML = items.map((_, i) =>
+            `<span data-index="${i}"></span>`
+        ).join('');
+    }
+
+    const updateDots = () => {
+        if (!dotsContainer) return;
+        let realIndex = currentIndex - 1;
+        if (realIndex >= totalItems) realIndex = 0;
+        if (realIndex < 0) realIndex = totalItems - 1;
+        dotsContainer.querySelectorAll('span').forEach((dot, i) => {
+            dot.classList.toggle('active', i === realIndex);
+        });
+    };
 
     // Get card width + gap
     const getCardWidth = () => {
@@ -697,6 +705,7 @@ function initWeddingSection() {
             void track.offsetHeight;
             track.style.transition = '';
         }
+        updateDots();
     };
 
     // Initial position
@@ -795,10 +804,7 @@ function initWeddingSection() {
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            if (isMobile()) {
-                track.innerHTML = items.map(buildCard).join('');
-                track.style.transform = '';
-            } else if (track.children.length === totalItems + 2) {
+            if (track.children.length === totalItems + 2) {
                 updateSlider(false);
             }
         }, 200);

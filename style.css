@@ -2694,6 +2694,10 @@ footer {
     cursor: grab;
 }
 
+.wedding-slider-dots {
+    display: none;
+}
+
 .wedding-slider-track.dragging {
     transition: none;
     cursor: grabbing;
@@ -2742,10 +2746,11 @@ footer {
     transform: none;
 }
 
-/* Hide arrows on mobile, use touch instead */
+/* Mobile: swipe carousel (no arrows, no scroll list) */
 @media (max-width: 768px) {
     .wedding-slider-wrap {
         gap: 0;
+        padding: 0 0 0 12px;
     }
 
     .wedding-slider-btn {
@@ -2753,51 +2758,62 @@ footer {
     }
 
     .wedding-slider-viewport {
-        -webkit-mask-image: none;
-        mask-image: none;
+        -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+        mask-image: linear-gradient(to right, black 80%, transparent 100%);
+        overflow: visible;
+        flex: none;
+        width: 100%;
     }
 
     .wedding-slider-track {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 16px;
-        cursor: default;
+        overflow: visible;
+        padding: 10px 0 12px 0;
+        cursor: grab;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        gap: 14px;
+    }
+
+    .wedding-slider-track.dragging {
         transition: none;
     }
 
     .wedding-slider-track .wedding-card {
-        scroll-snap-align: start;
-        flex: 0 0 220px;
-        min-width: 220px;
+        flex: 0 0 260px;
+        min-width: 260px;
     }
 
-    .wedding-slider-track::-webkit-scrollbar {
-        height: 4px;
+    /* Dots indicator */
+    .wedding-slider-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 0;
+        margin-bottom: 20px;
     }
 
-    .wedding-slider-track::-webkit-scrollbar-track {
-        background: rgba(193, 163, 109, 0.1);
-        border-radius: 4px;
-    }
-
-    .wedding-slider-track::-webkit-scrollbar-thumb {
+    .wedding-slider-dots span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
         background: rgba(193, 163, 109, 0.3);
-        border-radius: 4px;
+        transition: all 0.3s ease;
     }
-}
 
-@media (max-width: 600px) {
-    .wedding-slider-track .wedding-card {
-        flex: 0 0 175px;
-        min-width: 175px;
+    .wedding-slider-dots span.active {
+        background: var(--color-primary);
+        width: 20px;
+        border-radius: 4px;
     }
 }
 
 @media (max-width: 480px) {
+    .wedding-slider-wrap {
+        padding: 0 0 0 8px;
+    }
+
     .wedding-slider-track .wedding-card {
-        flex: 0 0 155px;
-        min-width: 155px;
+        flex: 0 0 220px;
+        min-width: 220px;
     }
 }
 
@@ -3591,9 +3607,9 @@ main {
 /* Floating Phone — Mobile only */
 .floating-phone-btn {
     display: none;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
     background-size: 200% 200%;
-    animation: phoneGlow 4s ease-in-out infinite;
+    animation: instagramGlow 4s ease-in-out infinite;
 }
 
 @media (max-width: 768px) {
@@ -3603,7 +3619,7 @@ main {
 }
 
 .floating-phone-btn:hover {
-    box-shadow: 0 8px 28px rgba(216, 167, 177, 0.5);
+    box-shadow: 0 8px 28px rgba(221, 42, 123, 0.5);
 }
 
 .floating-phone-btn svg {
@@ -3614,23 +3630,13 @@ main {
     transform: scale(1.1);
 }
 
-@keyframes phoneGlow {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-}
-
 .floating-phone-btn::after {
     content: '';
     position: absolute;
     inset: -4px;
     border-radius: 50%;
-    border: 2px solid rgba(216, 167, 177, 0.25);
-    animation: phonePulse 2.5s ease-in-out infinite;
-}
-
-@keyframes phonePulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.12); opacity: 0; }
+    border: 2px solid rgba(221, 42, 123, 0.25);
+    animation: socialPulse 2.5s ease-in-out infinite;
 }
 
 /* Floating Social (Instagram) */
